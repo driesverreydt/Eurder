@@ -11,59 +11,67 @@ class UserTest {
     private static Name myName;
     private static Address myAddress;
     private static EmailAddress myEmailAddress;
+    private static String myPassword;
     private static PhoneNumber myPhoneNumber;
     private static UserRole myUserRole;
 
     @BeforeAll
-    static void setup(){
-        myName = new Name("Dries","Verreydt");
+    static void setup() {
+        myName = new Name("Dries", "Verreydt");
         myAddress = new Address("Elkenlaan", 55, 3000, "Leuven");
-        myEmailAddress = new EmailAddress("driesv","hotmail","com");
-        myPhoneNumber = new PhoneNumber("0123456789","Belgium");
+        myEmailAddress = new EmailAddress("driesv", "hotmail", "com");
+        myPassword = "password";
+        myPhoneNumber = new PhoneNumber("0123456789", "Belgium");
         myUserRole = UserRole.ADMIN;
     }
 
     @Test
-    void givenUserinfoWithNoName_whenCreatingUser_thenExpectInvalidUserInformationException(){
+    void givenUserinfoWithNoName_whenCreatingUser_thenExpectInvalidUserInformationException() {
         Assertions.assertThatExceptionOfType(InvalidUserInformationException.class)
-                .isThrownBy(() -> new User(null,myAddress,myEmailAddress,myPhoneNumber,myUserRole));
+                .isThrownBy(() -> new User(null, myAddress, myEmailAddress, myPassword, myPhoneNumber, myUserRole));
     }
 
     @Test
-    void givenUserinfoWithNoFirstName_whenCreatingUser_thenExpectInvalidUserInformationException(){
-        Name myNameWithNoFirstName = new Name(null,"Verreydt");
+    void givenUserinfoWithNoFirstName_whenCreatingUser_thenExpectInvalidUserInformationException() {
+        Name myNameWithNoFirstName = new Name(null, "Verreydt");
         Assertions.assertThatExceptionOfType(InvalidUserInformationException.class)
-                .isThrownBy(() -> new User(myNameWithNoFirstName,myAddress,myEmailAddress,myPhoneNumber,myUserRole));
+                .isThrownBy(() -> new User(myNameWithNoFirstName, myAddress, myEmailAddress, myPassword, myPhoneNumber, myUserRole));
     }
 
     @Test
-    void givenUserinfoWithNoLastName_whenCreatingUser_thenExpectInvalidUserInformationException(){
-        Name myNameWithNoLastName = new Name("Dries",null);
+    void givenUserinfoWithNoLastName_whenCreatingUser_thenExpectInvalidUserInformationException() {
+        Name myNameWithNoLastName = new Name("Dries", null);
         Assertions.assertThatExceptionOfType(InvalidUserInformationException.class)
-                .isThrownBy(() -> new User(myNameWithNoLastName,myAddress,myEmailAddress,myPhoneNumber,myUserRole));
+                .isThrownBy(() -> new User(myNameWithNoLastName, myAddress, myEmailAddress, myPassword, myPhoneNumber, myUserRole));
     }
 
     @Test
-    void givenUserinfoWithNoAddress_whenCreatingUser_thenExpectInvalidUserInformationException(){
+    void givenUserinfoWithNoAddress_whenCreatingUser_thenExpectInvalidUserInformationException() {
         Assertions.assertThatExceptionOfType(InvalidUserInformationException.class)
-                .isThrownBy(() -> new User(myName,null,myEmailAddress,myPhoneNumber,myUserRole));
+                .isThrownBy(() -> new User(myName, null, myEmailAddress, myPassword, myPhoneNumber, myUserRole));
     }
 
     @Test
-    void givenUserinfoWithNoEmailAddress_whenCreatingUser_thenExpectInvalidUserInformationException(){
+    void givenUserinfoWithNoEmailAddress_whenCreatingUser_thenExpectInvalidUserInformationException() {
         Assertions.assertThatExceptionOfType(InvalidUserInformationException.class)
-                .isThrownBy(() -> new User(myName,myAddress,null,myPhoneNumber,myUserRole));
+                .isThrownBy(() -> new User(myName, myAddress, null, myPassword, myPhoneNumber, myUserRole));
     }
 
     @Test
-    void givenUserinfoWithNoPhoneNumber_whenCreatingUser_thenExpectInvalidUserInformationException(){
+    void givenUserinfoWithNoPassword_whenCreatingUser_thenExpectInvalidUserInformationException() {
         Assertions.assertThatExceptionOfType(InvalidUserInformationException.class)
-                .isThrownBy(() -> new User(myName,myAddress,myEmailAddress,null,myUserRole));
+                .isThrownBy(() -> new User(myName, myAddress, myEmailAddress, null, myPhoneNumber, myUserRole));
     }
 
     @Test
-    void givenUserinfoWithNoUserRole_whenCreatingUser_thenExpectInvalidUserInformationException(){
+    void givenUserinfoWithNoPhoneNumber_whenCreatingUser_thenExpectInvalidUserInformationException() {
         Assertions.assertThatExceptionOfType(InvalidUserInformationException.class)
-                .isThrownBy(() -> new User(myName,myAddress,myEmailAddress,myPhoneNumber,null));
+                .isThrownBy(() -> new User(myName, myAddress, myEmailAddress, myPassword, null, myUserRole));
+    }
+
+    @Test
+    void givenUserinfoWithNoUserRole_whenCreatingUser_thenExpectInvalidUserInformationException() {
+        Assertions.assertThatExceptionOfType(InvalidUserInformationException.class)
+                .isThrownBy(() -> new User(myName, myAddress, myEmailAddress, myPassword, myPhoneNumber, null));
     }
 }

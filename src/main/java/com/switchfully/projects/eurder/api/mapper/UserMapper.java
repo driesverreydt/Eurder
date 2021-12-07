@@ -11,6 +11,7 @@ public class UserMapper {
         return new User(userDto.getName(),
                 userDto.getAddress(),
                 userDto.getEmailAddress(),
+                userDto.getPassword(),
                 userDto.getPhoneNumber(),
                 userDto.getUserRole());
     }
@@ -21,6 +22,7 @@ public class UserMapper {
                 .setName(user.getName())
                 .setAddress(user.getAddress())
                 .setEmailAddress(user.getEmailAddress())
+                .setPassword(user.getPassword())
                 .setPhoneNumber(user.getPhoneNumber())
                 .setUserRole(user.getUserRole())
                 .build();

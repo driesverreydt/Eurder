@@ -6,6 +6,9 @@ import com.switchfully.projects.eurder.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
+import java.util.stream.Collectors;
+
 @Service
 public class UserService {
 
@@ -16,11 +19,10 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public User getUserByEmail(EmailAddress userEmailAddress) {
+    public Collection<User> getUsersByEmail(EmailAddress userEmailAddress) {
         return userRepository.getAllUsers().stream()
                 .filter(user -> user.getEmailAddress().equals(userEmailAddress))
-                .findFirst()
-                .orElse(null);
+                .toList();
     }
 
     public User saveUser(User user) {

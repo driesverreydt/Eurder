@@ -11,15 +11,17 @@ public class User {
     private final Name name;
     private final Address address;
     private final EmailAddress emailAddress;
+    private final String password;
     private final PhoneNumber phoneNumber;
     private final UserRole userRole;
 
-    public User(Name name, Address address, EmailAddress emailAddress, PhoneNumber phoneNumber, UserRole userRole) {
-        userInformationValidation(name, address, emailAddress, phoneNumber, userRole);
+    public User(Name name, Address address, EmailAddress emailAddress, String password, PhoneNumber phoneNumber, UserRole userRole) {
+        userInformationValidation(name, address, emailAddress, password, phoneNumber, userRole);
         this.userId = UUID.randomUUID().toString();
         this.name = name;
         this.address = address;
         this.emailAddress = emailAddress;
+        this.password = password;
         this.phoneNumber = phoneNumber;
         this.userRole = userRole;
     }
@@ -40,6 +42,10 @@ public class User {
         return emailAddress;
     }
 
+    public String getPassword() {
+        return password;
+    }
+
     public PhoneNumber getPhoneNumber() {
         return phoneNumber;
     }
@@ -48,7 +54,8 @@ public class User {
         return userRole;
     }
 
-    private void userInformationValidation(Name name, Address address, EmailAddress emailAddress, PhoneNumber phoneNumber, UserRole userRole) {
+    private void userInformationValidation(Name name, Address address, EmailAddress emailAddress, String password,
+                                           PhoneNumber phoneNumber, UserRole userRole) {
         if (name == null) {
             throw new InvalidUserInformationException("A user requires a name");
         }
@@ -63,6 +70,9 @@ public class User {
         }
         if (emailAddress == null) {
             throw new InvalidUserInformationException("A user requires an email address");
+        }
+        if (password == null) {
+            throw new InvalidUserInformationException("A user requires a password");
         }
         if (phoneNumber == null) {
             throw new InvalidUserInformationException("A user requires a phone number");

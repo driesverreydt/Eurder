@@ -15,6 +15,7 @@ public class UserDto {
     private final Name name;
     private final Address address;
     private final EmailAddress emailAddress;
+    private final String password;
     private final PhoneNumber phoneNumber;
     private final UserRole userRole;
 
@@ -23,6 +24,7 @@ public class UserDto {
         this.name = userDtoBuilder.name;
         this.address = userDtoBuilder.address;
         this.emailAddress = userDtoBuilder.emailAddress;
+        this.password = userDtoBuilder.password;
         this.phoneNumber = userDtoBuilder.phoneNumber;
         this.userRole = userDtoBuilder.userRole;
     }
@@ -43,6 +45,10 @@ public class UserDto {
         return emailAddress;
     }
 
+    public String getPassword() {
+        return password;
+    }
+
     public PhoneNumber getPhoneNumber() {
         return phoneNumber;
     }
@@ -58,6 +64,7 @@ public class UserDto {
         private Name name;
         private Address address;
         private EmailAddress emailAddress;
+        private String password;
         private PhoneNumber phoneNumber;
         private UserRole userRole;
 
@@ -78,6 +85,11 @@ public class UserDto {
 
         public UserDtoBuilder setEmailAddress(EmailAddress emailAddress) {
             this.emailAddress = emailAddress;
+            return this;
+        }
+
+        public UserDtoBuilder setPassword(String password) {
+            this.password = password;
             return this;
         }
 

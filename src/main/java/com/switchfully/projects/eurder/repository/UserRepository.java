@@ -16,8 +16,9 @@ public class UserRepository {
         this.userList = new ArrayList<>();
         User adminUser = new User(new Name("adminFirstName", "adminLastName"),
                 new Address("adminStreet", 0, 0, "adminCity"),
-                new EmailAddress("admin", "admin", "com"),
-                new PhoneNumber("0000000000","Belgium"), UserRole.ADMIN);
+                new EmailAddress("admin", "mail", "com"),
+                "adminpassword",
+                new PhoneNumber("0000000000", "Belgium"), UserRole.ADMIN);
         userList.add(adminUser);
     }
 

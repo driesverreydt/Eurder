@@ -21,15 +21,17 @@ class CustomerControllerTest {
 
     @Test
     void createUserCustomer_givenAUserCustomerDtoToCreate_thenTheNewlyCreatedUserCustomerIsSavedAndReturned() {
-        Name myName = new Name("Dries","Verreydt");
+        Name myName = new Name("Dries", "Verreydt");
         Address myAddress = new Address("Vaartstraat", 61, 3000, "Leuven");
-        EmailAddress myEmailAddress = new EmailAddress("driesvv","hotmail","com");
-        PhoneNumber myPhoneNumber = new PhoneNumber("0123456789","Belgium");
+        EmailAddress myEmailAddress = new EmailAddress("driesvv", "hotmail", "com");
+        String myPassword = "password";
+        PhoneNumber myPhoneNumber = new PhoneNumber("0123456789", "Belgium");
 
         UserDto createUserCustomerDto = new UserDto.UserDtoBuilder()
                 .setName(myName)
                 .setAddress(myAddress)
                 .setEmailAddress(myEmailAddress)
+                .setPassword(myPassword)
                 .setPhoneNumber(myPhoneNumber)
                 .setUserRole(UserRole.CUSTOMER)
                 .build();
@@ -53,6 +55,7 @@ class CustomerControllerTest {
         assertThat(createdUserCustomerDto.getName()).isEqualTo(myName);
         assertThat(createdUserCustomerDto.getAddress()).isEqualTo(myAddress);
         assertThat(createdUserCustomerDto.getEmailAddress()).isEqualTo(myEmailAddress);
+        assertThat(createdUserCustomerDto.getPassword()).isEqualTo(myPassword);
         assertThat(createdUserCustomerDto.getPhoneNumber()).isEqualTo(myPhoneNumber);
         assertThat(createdUserCustomerDto.getUserRole()).isEqualTo(UserRole.CUSTOMER);
 
@@ -61,12 +64,14 @@ class CustomerControllerTest {
     @Test
     void createUserCustomer_givenAnIncompleteUserCustomerDtoToCreate_thenRespondWithBadRequestAndMessage() {
         Address myAddress = new Address("Vaartstraat", 61, 3000, "Leuven");
-        EmailAddress myEmailAddress = new EmailAddress("driesvv","hotmail","com");
-        PhoneNumber myPhoneNumber = new PhoneNumber("0123456789","Belgium");
+        EmailAddress myEmailAddress = new EmailAddress("driesvv", "hotmail", "com");
+        String myPassword = "password";
+        PhoneNumber myPhoneNumber = new PhoneNumber("0123456789", "Belgium");
 
         UserDto createUserCustomerDto = new UserDto.UserDtoBuilder()
                 .setAddress(myAddress)
                 .setEmailAddress(myEmailAddress)
+                .setPassword(myPassword)
                 .setPhoneNumber(myPhoneNumber)
                 .setUserRole(UserRole.CUSTOMER)
                 .build();
