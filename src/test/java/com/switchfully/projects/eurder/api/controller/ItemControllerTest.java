@@ -1,8 +1,6 @@
 package com.switchfully.projects.eurder.api.controller;
 
 import com.switchfully.projects.eurder.api.dto.ItemDto;
-import com.switchfully.projects.eurder.api.dto.UserDto;
-import com.switchfully.projects.eurder.security.UserRole;
 import io.restassured.RestAssured;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -40,7 +38,7 @@ class ItemControllerTest {
         ItemDto createdItemDto =
                 RestAssured
                         .given()
-                        .header("Authorization",authorization)
+                        .header("Authorization", authorization)
                         .body(createItemDto)
                         .accept(JSON)
                         .contentType(JSON)
@@ -111,7 +109,7 @@ class ItemControllerTest {
         String responseMessage =
                 RestAssured
                         .given()
-                        .header("Authorization",authorization)
+                        .header("Authorization", authorization)
                         .body(createItemDto)
                         .accept(JSON)
                         .contentType(JSON)
@@ -145,7 +143,7 @@ class ItemControllerTest {
         String responseMessage =
                 RestAssured
                         .given()
-                        .header("Authorization",authorization)
+                        .header("Authorization", authorization)
                         .body(createItemDto)
                         .accept(JSON)
                         .contentType(JSON)

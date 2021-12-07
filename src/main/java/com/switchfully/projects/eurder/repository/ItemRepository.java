@@ -15,6 +15,10 @@ public class ItemRepository {
         itemCollection = new ArrayList<>();
     }
 
+    public Collection<Item> getAllItems(){
+        return itemCollection;
+    }
+
     public Item addItem(Item item){
         itemCollection.add(item);
         return item;
@@ -23,9 +27,5 @@ public class ItemRepository {
     public Item removeItem(Item item){
         itemCollection.remove(item);
         return item;
-    }
-
-    public Collection<Item> getAllItems(){
-        return itemCollection;
     }
 }

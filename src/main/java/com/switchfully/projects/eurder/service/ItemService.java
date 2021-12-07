@@ -5,6 +5,8 @@ import com.switchfully.projects.eurder.repository.ItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
+
 @Service
 public class ItemService {
 
@@ -15,7 +17,23 @@ public class ItemService {
         this.itemRepository = itemRepository;
     }
 
+    public Collection<Item> getItemsById(String itemId){
+        return itemRepository.getAllItems().stream()
+                .filter(item -> item.getItemId().equals(itemId))
+                .toList();
+    }
+
     public Item saveItem(Item item) {
         return itemRepository.addItem(item);
+    }
+
+    public boolean reduceStockOfItem(Item item, int amount){
+        itemRepository.removeItem(item);
+        int newAmount = item.getAmount() - amount;
+        if(newAmount >= 0){
+            item.setAmount(newAmount);
+        }
+        itemRepository.addItem(item);
+        return newAmount >= 0;
     }
 }

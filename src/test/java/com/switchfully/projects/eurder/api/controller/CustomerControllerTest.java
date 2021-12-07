@@ -58,7 +58,6 @@ class CustomerControllerTest {
         assertThat(createdUserCustomerDto.getPassword()).isEqualTo(myPassword);
         assertThat(createdUserCustomerDto.getPhoneNumber()).isEqualTo(myPhoneNumber);
         assertThat(createdUserCustomerDto.getUserRole()).isEqualTo(UserRole.CUSTOMER);
-
     }
 
     @Test
@@ -91,7 +90,5 @@ class CustomerControllerTest {
                         .extract().path("message");
 
         Assertions.assertThat(responseMessage).isEqualTo("A user requires a name");
-
-
     }
 }

@@ -30,6 +30,7 @@ public class AuthorizationService {
         featureAuthorizations.put(EurderFeature.ITEM_CREATE, UserRole.ADMIN);
 
         //Orders
+        featureAuthorizations.put(EurderFeature.ORDER_CREATE, UserRole.CUSTOMER);
     }
 
     public void authorize(EurderFeature eurderFeature, String authorization) {

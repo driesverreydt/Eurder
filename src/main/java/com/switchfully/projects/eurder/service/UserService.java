@@ -18,6 +18,12 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
+    public Collection<User> getUsersByUserId(String userId) {
+        return userRepository.getAllUsers().stream()
+                .filter(user -> user.getUserId().equals(userId))
+                .toList();
+    }
+
     public Collection<User> getUsersByEmail(EmailAddress userEmailAddress) {
         return userRepository.getAllUsers().stream()
                 .filter(user -> user.getEmailAddress().equals(userEmailAddress))
