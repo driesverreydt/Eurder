@@ -91,4 +91,73 @@ class ItemControllerTest {
         Assertions.assertThat(responseMessage).isEqualTo("User with role " + "guest" +
                 " does not have rights to feature " + "item_create");
     }
+
+    @Test
+    void givenAWrongUsername_whenAddingAnItemAsAdmin_thenRespondWithUnauthorizedAndMessage() {
+        String itemName = "potato";
+        String itemDescription = "";
+        double itemPrice = 0.5;
+        int itemAmount = 26;
+
+        ItemDto createItemDto = new ItemDto.ItemDtoBuilder()
+                .setName(itemName)
+                .setDescription(itemDescription)
+                .setPrice(itemPrice)
+                .setAmount(itemAmount)
+                .build();
+
+        String authorization = "Basic " + Base64.getEncoder().encodeToString("notauser@mail.com:adminpassword".getBytes());
+
+        String responseMessage =
+                RestAssured
+                        .given()
+                        .header("Authorization",authorization)
+                        .body(createItemDto)
+                        .accept(JSON)
+                        .contentType(JSON)
+                        .when()
+                        .port(port)
+                        .post("/items")
+                        .then()
+                        .assertThat()
+                        .statusCode(HttpStatus.UNAUTHORIZED.value())
+                        .extract().path("message");
+
+        Assertions.assertThat(responseMessage).isEqualTo("No user found with email " + "notauser@mail.com");
+    }
+
+    @Test
+    void givenAWrongPassword_whenAddingAnItemAsAdmin_thenRespondWithUnauthorizedAndMessage() {
+        String itemName = "potato";
+        String itemDescription = "";
+        double itemPrice = 0.5;
+        int itemAmount = 26;
+
+        ItemDto createItemDto = new ItemDto.ItemDtoBuilder()
+                .setName(itemName)
+                .setDescription(itemDescription)
+                .setPrice(itemPrice)
+                .setAmount(itemAmount)
+                .build();
+
+        String authorization = "Basic " + Base64.getEncoder().encodeToString("admin@mail.com:notadminpassword".getBytes());
+
+        String responseMessage =
+                RestAssured
+                        .given()
+                        .header("Authorization",authorization)
+                        .body(createItemDto)
+                        .accept(JSON)
+                        .contentType(JSON)
+                        .when()
+                        .port(port)
+                        .post("/items")
+                        .then()
+                        .assertThat()
+                        .statusCode(HttpStatus.UNAUTHORIZED.value())
+                        .extract().path("message");
+
+        Assertions.assertThat(responseMessage).isEqualTo("Password " + "notadminpassword" +
+                " does not match the password for user with email " + "admin@mail.com");
+    }
 }
