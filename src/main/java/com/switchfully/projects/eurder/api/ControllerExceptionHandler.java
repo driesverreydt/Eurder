@@ -1,8 +1,9 @@
 package com.switchfully.projects.eurder.api;
 
 
-import com.switchfully.projects.eurder.domain.user.InvalidEmailStructureException;
-import com.switchfully.projects.eurder.security.AuthorisationNotGrantedException;
+import com.switchfully.projects.eurder.domain.exception.InvalidEmailStructureException;
+import com.switchfully.projects.eurder.domain.exception.InvalidUserInformationException;
+import com.switchfully.projects.eurder.domain.exception.AuthorisationNotGrantedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -20,13 +21,19 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(AuthorisationNotGrantedException.class)
     protected void authorizationNotGranted(AuthorisationNotGrantedException ex,
-                                         HttpServletResponse response) throws IOException {
+                                           HttpServletResponse response) throws IOException {
         logger.error(ex.getMessage());
         response.sendError(HttpStatus.UNAUTHORIZED.value(), ex.getMessage());
     }
 
     @ExceptionHandler(InvalidEmailStructureException.class)
     protected void invalidEmailStructure(InvalidEmailStructureException ex,
+                                         HttpServletResponse response) throws IOException {
+        badRequest(ex, response);
+    }
+
+    @ExceptionHandler(InvalidUserInformationException.class)
+    protected void invalidEmailStructure(InvalidUserInformationException ex,
                                          HttpServletResponse response) throws IOException {
         badRequest(ex, response);
     }

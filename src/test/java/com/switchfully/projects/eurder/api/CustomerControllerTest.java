@@ -1,8 +1,10 @@
 package com.switchfully.projects.eurder.api;
 
+import com.switchfully.projects.eurder.api.dto.UserDto;
 import com.switchfully.projects.eurder.domain.user.*;
 import com.switchfully.projects.eurder.security.UserRole;
 import io.restassured.RestAssured;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -24,19 +26,13 @@ class CustomerControllerTest {
         EmailAddress myEmailAddress = new EmailAddress("driesvv","hotmail","com");
         PhoneNumber myPhoneNumber = new PhoneNumber("0123456789","Belgium");
 
-        UserDto createUserCustomerDto = new UserDto();
-        createUserCustomerDto.setName(myName);
-        createUserCustomerDto.setAddress(myAddress);
-        createUserCustomerDto.setEmailAddress(myEmailAddress);
-        createUserCustomerDto.setPhoneNumber(myPhoneNumber);
-        createUserCustomerDto.setUserRole(UserRole.CUSTOMER);
-        /*UserDto createUserCustomerDto = new UserDto.UserDtoBuilder()
+        UserDto createUserCustomerDto = new UserDto.UserDtoBuilder()
                 .setName(myName)
                 .setAddress(myAddress)
                 .setEmailAddress(myEmailAddress)
                 .setPhoneNumber(myPhoneNumber)
                 .setUserRole(UserRole.CUSTOMER)
-                .build();*/
+                .build();
 
         UserDto createdUserCustomerDto =
                 RestAssured
@@ -59,6 +55,38 @@ class CustomerControllerTest {
         assertThat(createdUserCustomerDto.getEmailAddress()).isEqualTo(myEmailAddress);
         assertThat(createdUserCustomerDto.getPhoneNumber()).isEqualTo(myPhoneNumber);
         assertThat(createdUserCustomerDto.getUserRole()).isEqualTo(UserRole.CUSTOMER);
+
+    }
+
+    @Test
+    void createUserCustomer_givenAnIncompleteUserCustomerDtoToCreate_thenRespondWithBadRequestAndMessage() {
+        Address myAddress = new Address("Vaartstraat", 61, 3000, "Leuven");
+        EmailAddress myEmailAddress = new EmailAddress("driesvv","hotmail","com");
+        PhoneNumber myPhoneNumber = new PhoneNumber("0123456789","Belgium");
+
+        UserDto createUserCustomerDto = new UserDto.UserDtoBuilder()
+                .setAddress(myAddress)
+                .setEmailAddress(myEmailAddress)
+                .setPhoneNumber(myPhoneNumber)
+                .setUserRole(UserRole.CUSTOMER)
+                .build();
+
+        String responseMessage =
+                RestAssured
+                        .given()
+                        .body(createUserCustomerDto)
+                        .accept(JSON)
+                        .contentType(JSON)
+                        .when()
+                        .port(port)
+                        .post("/users")
+                        .then()
+                        .assertThat()
+                        .statusCode(HttpStatus.BAD_REQUEST.value())
+                        .extract().path("message");
+
+        Assertions.assertThat(responseMessage).isEqualTo("A user requires a name");
+
 
     }
 }

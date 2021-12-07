@@ -1,6 +1,7 @@
 package com.switchfully.projects.eurder.domain.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.switchfully.projects.eurder.domain.exception.InvalidEmailStructureException;
 
 import java.util.Objects;
 

@@ -1,5 +1,6 @@
 package com.switchfully.projects.eurder.security;
 
+import com.switchfully.projects.eurder.domain.exception.AuthorisationNotGrantedException;
 import com.switchfully.projects.eurder.domain.user.EmailAddress;
 import com.switchfully.projects.eurder.domain.user.User;
 import com.switchfully.projects.eurder.service.UserService;

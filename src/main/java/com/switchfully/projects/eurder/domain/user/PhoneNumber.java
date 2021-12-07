@@ -1,7 +1,5 @@
 package com.switchfully.projects.eurder.domain.user;
 
-import org.springframework.web.bind.annotation.RequestHeader;
-
 import java.util.Objects;
 
 public class PhoneNumber {

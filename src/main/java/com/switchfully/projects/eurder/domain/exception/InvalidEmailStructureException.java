@@ -1,4 +1,4 @@
-package com.switchfully.projects.eurder.domain.user;
+package com.switchfully.projects.eurder.domain.exception;
 
 public class InvalidEmailStructureException extends RuntimeException {
 

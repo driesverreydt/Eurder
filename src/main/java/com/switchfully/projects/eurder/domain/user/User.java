@@ -1,5 +1,6 @@
 package com.switchfully.projects.eurder.domain.user;
 
+import com.switchfully.projects.eurder.domain.exception.InvalidUserInformationException;
 import com.switchfully.projects.eurder.security.UserRole;
 
 import java.util.UUID;
@@ -14,6 +15,7 @@ public class User {
     private final UserRole userRole;
 
     public User(Name name, Address address, EmailAddress emailAddress, PhoneNumber phoneNumber, UserRole userRole) {
+        userInformationValidation(name, address, emailAddress, phoneNumber, userRole);
         this.userId = UUID.randomUUID().toString();
         this.name = name;
         this.address = address;
@@ -44,5 +46,29 @@ public class User {
 
     public UserRole getUserRole() {
         return userRole;
+    }
+
+    private void userInformationValidation(Name name, Address address, EmailAddress emailAddress, PhoneNumber phoneNumber, UserRole userRole) {
+        if (name == null) {
+            throw new InvalidUserInformationException("A user requires a name");
+        }
+        if (name.getFirstName() == null) {
+            throw new InvalidUserInformationException("A user requires a first name");
+        }
+        if (name.getLastName() == null) {
+            throw new InvalidUserInformationException("A user requires a last name");
+        }
+        if (address == null) {
+            throw new InvalidUserInformationException("A user requires an address");
+        }
+        if (emailAddress == null) {
+            throw new InvalidUserInformationException("A user requires an email address");
+        }
+        if (phoneNumber == null) {
+            throw new InvalidUserInformationException("A user requires a phone number");
+        }
+        if (userRole == null) {
+            throw new InvalidUserInformationException("A user requires a user role");
+        }
     }
 }

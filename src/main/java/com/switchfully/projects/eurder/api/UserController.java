@@ -1,9 +1,8 @@
 package com.switchfully.projects.eurder.api;
 
 import com.switchfully.projects.eurder.api.mapper.UserMapper;
-import com.switchfully.projects.eurder.domain.user.SimpleDto;
 import com.switchfully.projects.eurder.domain.user.User;
-import com.switchfully.projects.eurder.domain.user.UserDto;
+import com.switchfully.projects.eurder.api.dto.UserDto;
 import com.switchfully.projects.eurder.security.AuthorizationService;
 import com.switchfully.projects.eurder.security.EurderFeature;
 import com.switchfully.projects.eurder.service.UserService;
@@ -46,7 +45,7 @@ public class UserController {
 
     @GetMapping(produces = "application/json")
     @ResponseStatus(HttpStatus.OK)
-    public Collection<UserDto> getAllUsers(){
+    public Collection<UserDto> getAllUsers() {
         logger.info("View all users method called");
         logger.info("View all users method successfully finished");
         return new ArrayList<>();
