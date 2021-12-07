@@ -23,7 +23,13 @@ public class AuthorizationService {
     public AuthorizationService(UserService userService) {
         this.userService = userService;
         this.featureAuthorizations = new HashMap<>();
+        //Users
         featureAuthorizations.put(EurderFeature.CUSTOMER_CREATE, UserRole.GUEST);
+
+        //Items
+        featureAuthorizations.put(EurderFeature.ITEM_CREATE, UserRole.ADMIN);
+
+        //Orders
     }
 
     public void authorize(EurderFeature eurderFeature, String authorization) {

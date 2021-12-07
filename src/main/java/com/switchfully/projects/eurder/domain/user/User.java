@@ -1,6 +1,5 @@
 package com.switchfully.projects.eurder.domain.user;
 
-import com.switchfully.projects.eurder.api.ControllerExceptionHandler;
 import com.switchfully.projects.eurder.domain.exception.InvalidUserInformationException;
 import com.switchfully.projects.eurder.security.UserRole;
 import org.slf4j.Logger;

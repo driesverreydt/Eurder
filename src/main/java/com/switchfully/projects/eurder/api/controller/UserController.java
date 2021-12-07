@@ -1,4 +1,4 @@
-package com.switchfully.projects.eurder.api;
+package com.switchfully.projects.eurder.api.controller;
 
 import com.switchfully.projects.eurder.api.mapper.UserMapper;
 import com.switchfully.projects.eurder.domain.user.User;
@@ -38,9 +38,9 @@ public class UserController {
         authorizationService.authorize(EurderFeature.CUSTOMER_CREATE, authorization);
         User user = userMapper.mapUserDtoToUser(userDto);
         User savedUser = userService.saveUser(user);
-        UserDto registeredUserDto = userMapper.mapUserToUserDto(savedUser);
+        UserDto savedUserDto = userMapper.mapUserToUserDto(savedUser);
         logger.info("Register customer method successfully finished");
-        return registeredUserDto;
+        return savedUserDto;
     }
 
     @GetMapping(produces = "application/json")

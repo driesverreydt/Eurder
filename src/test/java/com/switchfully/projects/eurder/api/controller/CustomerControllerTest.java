@@ -1,4 +1,4 @@
-package com.switchfully.projects.eurder.api;
+package com.switchfully.projects.eurder.api.controller;
 
 import com.switchfully.projects.eurder.api.dto.UserDto;
 import com.switchfully.projects.eurder.domain.user.*;
@@ -20,7 +20,7 @@ class CustomerControllerTest {
     private int port;
 
     @Test
-    void createUserCustomer_givenAUserCustomerDtoToCreate_thenTheNewlyCreatedUserCustomerIsSavedAndReturned() {
+    void givenAUserCustomerDtoToCreate_whenAddingAUserCustomer_thenTheNewlyCreatedUserCustomerIsSavedAndReturned() {
         Name myName = new Name("Dries", "Verreydt");
         Address myAddress = new Address("Vaartstraat", 61, 3000, "Leuven");
         EmailAddress myEmailAddress = new EmailAddress("driesvv", "hotmail", "com");

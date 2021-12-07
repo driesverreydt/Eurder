@@ -1,7 +1,7 @@
 package com.switchfully.projects.eurder.api;
 
-
 import com.switchfully.projects.eurder.domain.exception.InvalidEmailStructureException;
+import com.switchfully.projects.eurder.domain.exception.InvalidItemInformationException;
 import com.switchfully.projects.eurder.domain.exception.InvalidUserInformationException;
 import com.switchfully.projects.eurder.domain.exception.AuthorisationNotGrantedException;
 import org.slf4j.Logger;
@@ -34,6 +34,12 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(InvalidUserInformationException.class)
     protected void invalidEmailStructure(InvalidUserInformationException ex,
+                                         HttpServletResponse response) throws IOException {
+        badRequest(ex, response);
+    }
+
+    @ExceptionHandler(InvalidItemInformationException.class)
+    protected void invalidEmailStructure(InvalidItemInformationException ex,
                                          HttpServletResponse response) throws IOException {
         badRequest(ex, response);
     }
