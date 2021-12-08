@@ -25,6 +25,7 @@ public class AuthorizationService {
         this.featureAuthorizations = new HashMap<>();
         //Users
         featureAuthorizations.put(EurderFeature.CUSTOMER_CREATE, UserRole.GUEST);
+        featureAuthorizations.put(EurderFeature.CUSTOMER_VIEW_ALL, UserRole.ADMIN);
 
         //Items
         featureAuthorizations.put(EurderFeature.ITEM_CREATE, UserRole.ADMIN);

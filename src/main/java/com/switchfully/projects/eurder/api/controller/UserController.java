@@ -45,9 +45,14 @@ public class UserController {
 
     @GetMapping(produces = "application/json")
     @ResponseStatus(HttpStatus.OK)
-    public Collection<UserDto> getAllUsers() {
-        logger.info("View all users method called");
-        logger.info("View all users method successfully finished");
-        return new ArrayList<>();
+    public Collection<UserDto> getAllCustomers(@RequestHeader(required = false) String authorization) {
+        logger.info("View all customers method called");
+        authorizationService.authorize(EurderFeature.CUSTOMER_VIEW_ALL, authorization);
+        Collection<User> customers = userService.getAllCustomers();
+        Collection<UserDto> customerDtos = customers.stream()
+                .map(userMapper::mapUserToUserDto)
+                .toList();
+        logger.info("View all customers method successfully finished");
+        return customerDtos;
     }
 }

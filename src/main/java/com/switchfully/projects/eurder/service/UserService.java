@@ -3,6 +3,7 @@ package com.switchfully.projects.eurder.service;
 import com.switchfully.projects.eurder.domain.user.EmailAddress;
 import com.switchfully.projects.eurder.domain.user.User;
 import com.switchfully.projects.eurder.repository.UserRepository;
+import com.switchfully.projects.eurder.security.UserRole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +17,12 @@ public class UserService {
     @Autowired
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
+    }
+
+    public Collection<User> getAllCustomers(){
+        return userRepository.getAllUsers().stream()
+                .filter(user -> user.getUserRole().equals(UserRole.CUSTOMER))
+                .toList();
     }
 
     public Collection<User> getUsersByUserId(String userId) {
