@@ -273,6 +273,27 @@ class UserControllerTest {
         assertThat(customersAreTheSame(createdUserCustomerDto,customer)).isTrue();
     }
 
+    @Test
+    void givenCustomerNotInSystem_whenRequestingToViewCustomer_thenBadRequestResponseIsReturnedWithMessage(){
+        String authorization = "Basic " + Base64.getEncoder().encodeToString("admin@mail.com:adminpassword".getBytes());
+
+        String responseMessage =
+                RestAssured
+                        .given()
+                        .header("Authorization", authorization)
+                        .accept(JSON)
+                        .contentType(JSON)
+                        .when()
+                        .port(port)
+                        .get("/users/"+"notauserid")
+                        .then()
+                        .assertThat()
+                        .statusCode(HttpStatus.BAD_REQUEST.value())
+                        .extract().path("message");
+
+        Assertions.assertThat(responseMessage).isEqualTo("Customer with id " + "notauserid" + " could not be found");
+    }
+
     private boolean collectionContains(Collection<UserDto> customerCollection, UserDto customer){
         for(UserDto customerInCollection : customerCollection){
             if(customersAreTheSame(customerInCollection,customer)){

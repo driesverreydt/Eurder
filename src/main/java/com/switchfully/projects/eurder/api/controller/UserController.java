@@ -67,7 +67,7 @@ public class UserController {
             customer = userService.getCustomersById(userId).iterator().next();
         } catch (NoSuchElementException ex){
             logger.error("Customer with id " + userId + "could not be found");
-            throw new NoSuchCustomerException("Customer with id " + userId + "could not be found");
+            throw new NoSuchCustomerException("Customer with id " + userId + " could not be found");
         }
         UserDto customerDto = userMapper.mapUserToUserDto(customer);
         logger.info("View customer by id method successfully finished");

@@ -30,31 +30,31 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(InvalidUserInformationException.class)
-    protected void invalidEmailStructure(InvalidUserInformationException ex,
+    protected void invalidUserInformation(InvalidUserInformationException ex,
                                          HttpServletResponse response) throws IOException {
         badRequest(ex, response);
     }
 
     @ExceptionHandler(InvalidItemInformationException.class)
-    protected void invalidEmailStructure(InvalidItemInformationException ex,
+    protected void invalidItemInformation(InvalidItemInformationException ex,
                                          HttpServletResponse response) throws IOException {
         badRequest(ex, response);
     }
 
     @ExceptionHandler(InvalidOrderInformationException.class)
-    protected void invalidEmailStructure(InvalidOrderInformationException ex,
+    protected void invalidOrderInformation(InvalidOrderInformationException ex,
                                          HttpServletResponse response) throws IOException {
         badRequest(ex, response);
     }
 
     @ExceptionHandler(InvalidItemGroupInformationException.class)
-    protected void invalidEmailStructure(InvalidItemGroupInformationException ex,
+    protected void invalidItemGroupInformation(InvalidItemGroupInformationException ex,
                                          HttpServletResponse response) throws IOException {
         badRequest(ex, response);
     }
 
     @ExceptionHandler(NoSuchCustomerException.class)
-    protected void invalidEmailStructure(NoSuchCustomerException ex,
+    protected void noSuchCustomer(NoSuchCustomerException ex,
                                          HttpServletResponse response) throws IOException {
         badRequest(ex, response);
     }

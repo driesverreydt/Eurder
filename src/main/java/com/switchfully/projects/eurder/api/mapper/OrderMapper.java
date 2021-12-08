@@ -17,8 +17,11 @@ public class OrderMapper {
     }
 
     public Order mapOrderDtoToOrder(OrderDto orderDto) {
-        Collection<ItemGroup> itemGroupCollection = orderDto.getItemGroupDtoCollection().stream()
-                .map(itemGroupMapper::mapItemGroupDtoToItemGroup).toList();
+        Collection<ItemGroup> itemGroupCollection = null;
+        if(orderDto.getItemGroupDtoCollection() != null){
+            itemGroupCollection = orderDto.getItemGroupDtoCollection().stream()
+                    .map(itemGroupMapper::mapItemGroupDtoToItemGroup).toList();
+        }
         return new Order(orderDto.getUserId(),
                 itemGroupCollection);
     }

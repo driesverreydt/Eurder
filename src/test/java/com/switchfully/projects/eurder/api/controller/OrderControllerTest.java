@@ -103,7 +103,7 @@ class OrderControllerTest {
         String itemName2 = "tomato";
         String itemDescription2 = "A tomato";
         double itemPrice2 = 3.5;
-        int itemAmount2 = 15;
+        int itemAmount2 = 9;
 
         ItemDto createItemDto2 = new ItemDto.ItemDtoBuilder()
                 .setName(itemName2)
@@ -167,5 +167,70 @@ class OrderControllerTest {
                         .asString();
 
         assertThat(Double.parseDouble(totalOrderCost)).isEqualTo(39.5);
+    }
+
+    @Test
+    void givenAnIncompleteOrder_whenAddingAnOrderAsCustomer_thenRespondWithBadRequestAndMessage() {
+        OrderDto createOrderDto = new OrderDto.OrderDtoBuilder()
+                .setUserId(customer.getUserId())
+                .build();
+
+        String authorization = "Basic " + Base64.getEncoder().encodeToString("driesvv@hotmail.com:customerpassword".getBytes());
+
+        String responseMessage =
+                RestAssured
+                        .given()
+                        .header("Authorization", authorization)
+                        .body(createOrderDto)
+                        .accept(JSON)
+                        .contentType(JSON)
+                        .when()
+                        .port(port)
+                        .post("/orders")
+                        .then()
+                        .assertThat()
+                        .statusCode(HttpStatus.BAD_REQUEST.value())
+                        .extract().path("message");
+
+        assertThat(responseMessage).isEqualTo("For an order the itemGroupCollection " +
+                "referencing the items to be ordered has to be present");
+    }
+
+    @Test
+    void givenAnIncompleteItemGroup_whenAddingAnOrderAsCustomer_thenRespondWithBadRequestAndMessage() {
+        Collection<ItemGroupDto> itemGroupDtoCollection = new ArrayList<>();
+        ItemGroupDto itemGroupDto1 = new ItemGroupDto.ItemGroupDtoBuilder()
+                .setItemId(item1.getItemId())
+                .setAmount(9)
+                .build();
+        ItemGroupDto itemGroupDto2 = new ItemGroupDto.ItemGroupDtoBuilder()
+                .setAmount(10)
+                .build();
+        itemGroupDtoCollection.add(itemGroupDto1);
+        itemGroupDtoCollection.add(itemGroupDto2);
+
+        OrderDto createOrderDto = new OrderDto.OrderDtoBuilder()
+                .setUserId(customer.getUserId())
+                .setItemGroupDtoCollection(itemGroupDtoCollection)
+                .build();
+
+        String authorization = "Basic " + Base64.getEncoder().encodeToString("driesvv@hotmail.com:customerpassword".getBytes());
+
+        String responseMessage =
+                RestAssured
+                        .given()
+                        .header("Authorization", authorization)
+                        .body(createOrderDto)
+                        .accept(JSON)
+                        .contentType(JSON)
+                        .when()
+                        .port(port)
+                        .post("/orders")
+                        .then()
+                        .assertThat()
+                        .statusCode(HttpStatus.BAD_REQUEST.value())
+                        .extract().path("message");
+
+        assertThat(responseMessage).isEqualTo("The itemId in an item group cannot be null");
     }
 }
