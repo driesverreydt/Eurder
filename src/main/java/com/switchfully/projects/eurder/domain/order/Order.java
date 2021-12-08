@@ -27,7 +27,9 @@ public class Order {
         return itemGroupCollection;
     }
 
-    public double getTotalPrice(){
-        return 0;
+    public double getTotalOrderPrice() {
+        return itemGroupCollection.stream()
+                .map(itemGroup -> itemGroup.getAmount() * itemGroup.getPriceSnapshot())
+                .reduce(0.0, Double::sum);
     }
 }

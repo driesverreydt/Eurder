@@ -1,4 +1,4 @@
-package com.switchfully.projects.eurder.service;
+package com.switchfully.projects.eurder.service.shippingdatecalculator;
 
 import java.time.LocalDate;
 

@@ -17,7 +17,7 @@ public class ItemService {
         this.itemRepository = itemRepository;
     }
 
-    public Collection<Item> getItemsById(String itemId){
+    public Collection<Item> getItemsById(String itemId) {
         return itemRepository.getAllItems().stream()
                 .filter(item -> item.getItemId().equals(itemId))
                 .toList();
@@ -27,13 +27,11 @@ public class ItemService {
         return itemRepository.addItem(item);
     }
 
-    public boolean reduceStockOfItem(Item item, int amount){
-        itemRepository.removeItem(item);
+    //TODO move this into item?
+    public void reduceStockOfItem(Item item, int amount) {
         int newAmount = item.getAmount() - amount;
-        if(newAmount >= 0){
+        if (newAmount >= 0) {
             item.setAmount(newAmount);
         }
-        itemRepository.addItem(item);
-        return newAmount >= 0;
     }
 }

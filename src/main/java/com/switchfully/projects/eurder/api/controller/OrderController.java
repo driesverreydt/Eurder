@@ -28,7 +28,7 @@ public class OrderController {
         this.authorizationService = authorizationService;
     }
 
-    @PostMapping(consumes = "application/json", produces = "application/text")
+    @PostMapping(consumes = "application/json", produces = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
     public double createOrder(@RequestBody OrderDto orderDto, @RequestHeader(required = false) String authorization) {
         logger.info("Add order method called");

@@ -46,6 +46,10 @@ public class Item {
     }
 
     public void setAmount(int amount) {
+        if (amount < 0) {
+            logger.info("For an item amount can not be less than 0");
+            throw new InvalidItemInformationException("For an item amount can not be less than 0");
+        }
         this.amount = amount;
     }
 

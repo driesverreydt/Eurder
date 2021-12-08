@@ -11,12 +11,12 @@ public class OrderDto {
 
     private final String orderId;
     private final String userId;
-    private final Collection<ItemGroup> itemGroupCollection;
+    private final Collection<ItemGroupDto> itemGroupDtoCollection;
 
     private OrderDto(OrderDtoBuilder orderDtoBuilder) {
         this.orderId = orderDtoBuilder.orderId;
         this.userId = orderDtoBuilder.userId;
-        this.itemGroupCollection = orderDtoBuilder.itemGroupCollection;
+        this.itemGroupDtoCollection = orderDtoBuilder.itemGroupDtoCollection;
     }
 
     public String getOrderId() {
@@ -27,15 +27,15 @@ public class OrderDto {
         return userId;
     }
 
-    public Collection<ItemGroup> getItemGroupCollection() {
-        return itemGroupCollection;
+    public Collection<ItemGroupDto> getItemGroupDtoCollection() {
+        return itemGroupDtoCollection;
     }
 
     @JsonPOJOBuilder(withPrefix = "set")
     public static class OrderDtoBuilder {
         private String orderId;
         private String userId;
-        private Collection<ItemGroup> itemGroupCollection;
+        private Collection<ItemGroupDto> itemGroupDtoCollection;
 
         public OrderDtoBuilder setOrderId(String orderId) {
             this.orderId = orderId;
@@ -47,8 +47,8 @@ public class OrderDto {
             return this;
         }
 
-        public OrderDtoBuilder setItemGroupCollection(Collection<ItemGroup> itemGroupCollection) {
-            this.itemGroupCollection = itemGroupCollection;
+        public OrderDtoBuilder setItemGroupDtoCollection(Collection<ItemGroupDto> itemGroupDtoCollection) {
+            this.itemGroupDtoCollection = itemGroupDtoCollection;
             return this;
         }
 

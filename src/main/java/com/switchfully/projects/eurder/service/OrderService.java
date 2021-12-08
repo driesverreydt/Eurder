@@ -5,6 +5,9 @@ import com.switchfully.projects.eurder.domain.item.Item;
 import com.switchfully.projects.eurder.domain.order.ItemGroup;
 import com.switchfully.projects.eurder.domain.order.Order;
 import com.switchfully.projects.eurder.repository.OrderRepository;
+import com.switchfully.projects.eurder.service.shippingdatecalculator.ShippingDateCalculator;
+import com.switchfully.projects.eurder.service.shippingdatecalculator.ShippingDateCalculatorInStock;
+import com.switchfully.projects.eurder.service.shippingdatecalculator.ShippingDateCalculatorOutOfStock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,37 +27,44 @@ public class OrderService {
         this.itemService = itemService;
     }
 
-    public double saveOrder(Order order){
+    public double saveOrder(Order order) {
         doesUserExist(order.getUserId());
         doItemsExist(order.getItemGroupCollection());
-        setShippingOrdersAndAdjustStock(order);
+        setPriceSnapShots(order);
+        setShippingOrders(order);
+        adjustStock(order);
         orderRepository.addOrder(order);
-        return order.getTotalPrice();
+        return order.getTotalOrderPrice();
     }
 
-    private void doesUserExist(String userId){
-        if(userService.getUsersByUserId(userId).isEmpty()){
+    private void doesUserExist(String userId) {
+        if (userService.getUsersByUserId(userId).isEmpty()) {
             throw new InvalidOrderInformationException("The userId " + userId + " in the order is not in the system");
         }
     }
 
-    private void doItemsExist(Collection<ItemGroup> itemGroupCollection){
-        for(ItemGroup itemGroup : itemGroupCollection){
-            if(itemService.getItemsById(itemGroup.getItemId()).isEmpty()){
+    private void doItemsExist(Collection<ItemGroup> itemGroupCollection) {
+        for (ItemGroup itemGroup : itemGroupCollection) {
+            if (itemService.getItemsById(itemGroup.getItemId()).isEmpty()) {
                 throw new InvalidOrderInformationException("The itemId " + itemGroup.getItemId() + " in the order is not in the system");
             }
         }
     }
 
-    //TODO refactor method
-    private void setShippingOrdersAndAdjustStock(Order order) {
-        Collection<ItemGroup> oldItemGroup = order.getItemGroupCollection();
-        for(ItemGroup itemGroup : oldItemGroup){
+    private void setPriceSnapShots(Order order) {
+        for (ItemGroup itemGroup : order.getItemGroupCollection()) {
             Item item = itemService.getItemsById(itemGroup.getItemId()).iterator().next();
-            boolean inStock = itemService.reduceStockOfItem(item,itemGroup.getAmount());
+            itemGroup.setPriceSnapshot(item.getPrice());
+        }
+    }
+
+    private void setShippingOrders(Order order) {
+        for (ItemGroup itemGroup : order.getItemGroupCollection()) {
+            Item item = itemService.getItemsById(itemGroup.getItemId()).iterator().next();
+            boolean enoughInStock = item.getAmount() >= itemGroup.getAmount();
 
             ShippingDateCalculator shippingDateCalculator;
-            if(inStock){
+            if (enoughInStock) {
                 shippingDateCalculator = new ShippingDateCalculatorInStock();
             } else {
                 shippingDateCalculator = new ShippingDateCalculatorOutOfStock();
@@ -62,4 +72,13 @@ public class OrderService {
             itemGroup.setShippingDate(shippingDateCalculator.calculateShippingDate());
         }
     }
+
+    private void adjustStock(Order order) {
+        for (ItemGroup itemGroup : order.getItemGroupCollection()) {
+            Item item = itemService.getItemsById(itemGroup.getItemId()).iterator().next();
+            itemService.reduceStockOfItem(item, itemGroup.getAmount());
+        }
+    }
+
+
 }
