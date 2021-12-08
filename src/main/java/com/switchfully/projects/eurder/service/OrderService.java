@@ -81,7 +81,10 @@ public class OrderService {
     private void adjustStock(Order order) {
         for (ItemGroup itemGroup : order.getItemGroupCollection()) {
             Item item = itemService.getItemsById(itemGroup.getItemId()).iterator().next();
-            itemService.reduceStockOfItem(item, itemGroup.getAmount());
+            int newAmount = item.getAmount()-itemGroup.getAmount();
+            if(newAmount >= 0) {
+                item.setAmount(newAmount);
+            }
         }
     }
 

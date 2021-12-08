@@ -27,11 +27,4 @@ public class ItemService {
         return itemRepository.addItem(item);
     }
 
-    //TODO move this into item?
-    public void reduceStockOfItem(Item item, int amount) {
-        int newAmount = item.getAmount() - amount;
-        if (newAmount >= 0) {
-            item.setAmount(newAmount);
-        }
-    }
 }
