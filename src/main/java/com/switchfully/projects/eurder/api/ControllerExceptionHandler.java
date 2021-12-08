@@ -53,6 +53,12 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
         badRequest(ex, response);
     }
 
+    @ExceptionHandler(NoSuchCustomerException.class)
+    protected void invalidEmailStructure(NoSuchCustomerException ex,
+                                         HttpServletResponse response) throws IOException {
+        badRequest(ex, response);
+    }
+
     private void badRequest(Exception ex, HttpServletResponse response) throws IOException {
         logger.error(ex.getMessage());
         response.sendError(HttpStatus.BAD_REQUEST.value(), ex.getMessage());

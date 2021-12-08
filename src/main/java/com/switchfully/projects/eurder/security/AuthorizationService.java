@@ -26,6 +26,7 @@ public class AuthorizationService {
         //Users
         featureAuthorizations.put(EurderFeature.CUSTOMER_CREATE, UserRole.GUEST);
         featureAuthorizations.put(EurderFeature.CUSTOMER_VIEW_ALL, UserRole.ADMIN);
+        featureAuthorizations.put(EurderFeature.CUSTOMER_VIEW_SINGLE, UserRole.ADMIN);
 
         //Items
         featureAuthorizations.put(EurderFeature.ITEM_CREATE, UserRole.ADMIN);

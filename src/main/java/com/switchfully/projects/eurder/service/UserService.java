@@ -25,6 +25,11 @@ public class UserService {
                 .toList();
     }
 
+    public Collection<User> getCustomersById(String userId){
+        return getAllCustomers().stream()
+                .filter(user -> user.getUserId().equals(userId))
+                .toList();
+    }
     public Collection<User> getUsersByUserId(String userId) {
         return userRepository.getAllUsers().stream()
                 .filter(user -> user.getUserId().equals(userId))

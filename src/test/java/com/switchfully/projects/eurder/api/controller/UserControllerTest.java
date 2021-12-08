@@ -219,34 +219,91 @@ class UserControllerTest {
         assertThat(customerCollection.size()).isEqualTo(3);
     }
 
+    @Test
+    void givenASystemWithCustomer_whenRequestingADetailViewOfCustomerAsAdmin_thenRespondWithDetailsOfCustomer() {
+        //Add customer
+        Name myName = new Name("Dries", "Verreydt");
+        Address myAddress = new Address("Vaartstraat", 61, 3000, "Leuven");
+        EmailAddress myEmailAddress = new EmailAddress("driesvv", "hotmail", "com");
+        String myPassword = "password";
+        PhoneNumber myPhoneNumber = new PhoneNumber("0123456789", "Belgium");
+
+        UserDto createUserCustomerDto = new UserDto.UserDtoBuilder()
+                .setName(myName)
+                .setAddress(myAddress)
+                .setEmailAddress(myEmailAddress)
+                .setPassword(myPassword)
+                .setPhoneNumber(myPhoneNumber)
+                .setUserRole(UserRole.CUSTOMER)
+                .build();
+
+        UserDto createdUserCustomerDto =
+                RestAssured
+                        .given()
+                        .body(createUserCustomerDto)
+                        .accept(JSON)
+                        .contentType(JSON)
+                        .when()
+                        .port(port)
+                        .post("/users")
+                        .then()
+                        .assertThat()
+                        .statusCode(HttpStatus.CREATED.value())
+                        .extract()
+                        .as(UserDto.class);
+
+        //check customer by id
+        String authorization = "Basic " + Base64.getEncoder().encodeToString("admin@mail.com:adminpassword".getBytes());
+
+        UserDto customer =
+                RestAssured
+                        .given()
+                        .header("Authorization", authorization)
+                        .accept(JSON)
+                        .contentType(JSON)
+                        .when()
+                        .port(port)
+                        .get("/users/"+createdUserCustomerDto.getUserId())
+                        .then()
+                        .assertThat()
+                        .statusCode(HttpStatus.OK.value())
+                        .extract()
+                        .as(UserDto.class);
+
+        assertThat(customersAreTheSame(createdUserCustomerDto,customer)).isTrue();
+    }
+
     private boolean collectionContains(Collection<UserDto> customerCollection, UserDto customer){
         for(UserDto customerInCollection : customerCollection){
-            boolean collectionContains = true;
-            if(!customerInCollection.getUserId().equals(customer.getUserId())){
-                collectionContains = false;
-            }
-            if(!customerInCollection.getName().equals(customer.getName())){
-                collectionContains = false;
-            }
-            if(!customerInCollection.getAddress().equals(customer.getAddress())){
-                collectionContains = false;
-            }
-            if(!customerInCollection.getEmailAddress().equals(customer.getEmailAddress())){
-                collectionContains = false;
-            }
-            if(!customerInCollection.getPassword().equals(customer.getPassword())){
-                collectionContains = false;
-            }
-            if(!customerInCollection.getPhoneNumber().equals(customer.getPhoneNumber())){
-                collectionContains = false;
-            }
-            if(!customerInCollection.getUserRole().equals(customer.getUserRole())){
-                collectionContains = false;
-            }
-            if(collectionContains){
+            if(customersAreTheSame(customerInCollection,customer)){
                 return true;
             }
         }
         return false;
+    }
+
+    private boolean customersAreTheSame(UserDto customer1, UserDto customer2){
+        if(!customer1.getUserId().equals(customer2.getUserId())){
+            return false;
+        }
+        if(!customer1.getName().equals(customer2.getName())){
+            return false;
+        }
+        if(!customer1.getAddress().equals(customer2.getAddress())){
+            return false;
+        }
+        if(!customer1.getEmailAddress().equals(customer2.getEmailAddress())){
+            return false;
+        }
+        if(!customer1.getPassword().equals(customer2.getPassword())){
+            return false;
+        }
+        if(!customer1.getPhoneNumber().equals(customer2.getPhoneNumber())){
+            return false;
+        }
+        if(!customer1.getUserRole().equals(customer2.getUserRole())){
+            return false;
+        }
+        return true;
     }
 }

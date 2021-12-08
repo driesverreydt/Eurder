@@ -1,6 +1,7 @@
 package com.switchfully.projects.eurder.api.controller;
 
 import com.switchfully.projects.eurder.api.mapper.UserMapper;
+import com.switchfully.projects.eurder.domain.exception.NoSuchCustomerException;
 import com.switchfully.projects.eurder.domain.user.User;
 import com.switchfully.projects.eurder.api.dto.UserDto;
 import com.switchfully.projects.eurder.security.AuthorizationService;
@@ -12,8 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/users")
@@ -54,5 +55,22 @@ public class UserController {
                 .toList();
         logger.info("View all customers method successfully finished");
         return customerDtos;
+    }
+
+    @GetMapping(path = "/{userId}" , produces = "application/json")
+    @ResponseStatus(HttpStatus.OK)
+    public UserDto getCustomerById(@PathVariable String userId, @RequestHeader(required = false) String authorization) {
+        logger.info("View customer by id method called");
+        authorizationService.authorize(EurderFeature.CUSTOMER_VIEW_SINGLE, authorization);
+        User customer;
+        try {
+            customer = userService.getCustomersById(userId).iterator().next();
+        } catch (NoSuchElementException ex){
+            logger.error("Customer with id " + userId + "could not be found");
+            throw new NoSuchCustomerException("Customer with id " + userId + "could not be found");
+        }
+        UserDto customerDto = userMapper.mapUserToUserDto(customer);
+        logger.info("View customer by id method successfully finished");
+        return customerDto;
     }
 }
