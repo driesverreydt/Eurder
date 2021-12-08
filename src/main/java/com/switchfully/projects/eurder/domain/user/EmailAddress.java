@@ -2,6 +2,8 @@ package com.switchfully.projects.eurder.domain.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.switchfully.projects.eurder.domain.exception.InvalidEmailStructureException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Objects;
 
@@ -13,6 +15,7 @@ public class EmailAddress {
     private final String userName;
     private final String domainName;
     private final String extension;
+    private static final Logger logger = LoggerFactory.getLogger(EmailAddress.class);
 
     public EmailAddress(String userName, String domainName, String extension) {
         this.userName = userName;
@@ -47,6 +50,7 @@ public class EmailAddress {
 
     private static void validateEmailAddressString(String emailAddressString) {
         if (!emailAddressString.matches(EMAIL_REGEX)) {
+            logger.error("The email string " + emailAddressString + " does not have a valid email structure");
             throw new InvalidEmailStructureException("The provided email " + emailAddressString + " does not have a valid email structure");
         }
     }

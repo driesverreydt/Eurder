@@ -8,6 +8,8 @@ import com.switchfully.projects.eurder.repository.OrderRepository;
 import com.switchfully.projects.eurder.service.shippingdatecalculator.ShippingDateCalculator;
 import com.switchfully.projects.eurder.service.shippingdatecalculator.ShippingDateCalculatorInStock;
 import com.switchfully.projects.eurder.service.shippingdatecalculator.ShippingDateCalculatorOutOfStock;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +21,7 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final UserService userService;
     private final ItemService itemService;
+    private final Logger logger = LoggerFactory.getLogger(OrderService.class);
 
     @Autowired
     public OrderService(OrderRepository orderRepository, UserService userService, ItemService itemService) {
@@ -39,6 +42,7 @@ public class OrderService {
 
     private void doesUserExist(String userId) {
         if (userService.getUsersByUserId(userId).isEmpty()) {
+            logger.error("The userId " + userId + " in the order is not in the system");
             throw new InvalidOrderInformationException("The userId " + userId + " in the order is not in the system");
         }
     }
@@ -46,6 +50,7 @@ public class OrderService {
     private void doItemsExist(Collection<ItemGroup> itemGroupCollection) {
         for (ItemGroup itemGroup : itemGroupCollection) {
             if (itemService.getItemsById(itemGroup.getItemId()).isEmpty()) {
+                logger.error("The itemId " + itemGroup.getItemId() + " in the order is not in the system");
                 throw new InvalidOrderInformationException("The itemId " + itemGroup.getItemId() + " in the order is not in the system");
             }
         }

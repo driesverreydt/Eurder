@@ -47,7 +47,7 @@ public class Item {
 
     public void setAmount(int amount) {
         if (amount < 0) {
-            logger.info("For an item amount can not be less than 0");
+            logger.error("For an item amount can not be less than 0");
             throw new InvalidItemInformationException("For an item amount can not be less than 0");
         }
         this.amount = amount;
@@ -55,19 +55,19 @@ public class Item {
 
     private void itemInformationValidation(String name, String description, double price, int amount) {
         if (name == null) {
-            logger.info("At item creation name was null");
+            logger.error("At item creation name was null");
             throw new InvalidItemInformationException("An item requires a name");
         }
         if (description == null) {
-            logger.info("At item creation description was null");
+            logger.error("At item creation description was null");
             throw new InvalidItemInformationException("An item requires a description");
         }
         if (price <= 0) {
-            logger.info("At item creation price was not greater than 0");
+            logger.error("At item creation price was not greater than 0");
             throw new InvalidItemInformationException("An item requires a price greater than 0");
         }
         if (amount <= 0) {
-            logger.info("At item creation amount was not greater than 0");
+            logger.error("At item creation amount was not greater than 0");
             throw new InvalidItemInformationException("An item requires an amount greater than 0");
         }
     }
