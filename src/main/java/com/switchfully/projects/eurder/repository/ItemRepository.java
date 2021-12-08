@@ -23,9 +23,4 @@ public class ItemRepository {
         itemCollection.add(item);
         return item;
     }
-
-    public Item removeItem(Item item){
-        itemCollection.remove(item);
-        return item;
-    }
 }

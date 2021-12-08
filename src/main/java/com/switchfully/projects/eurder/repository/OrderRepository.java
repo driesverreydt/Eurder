@@ -15,17 +15,8 @@ public class OrderRepository {
         this.orderCollection = new ArrayList<>();
     }
 
-    public Collection<Order> getAllOrders() {
-        return orderCollection;
-    }
-
     public Order addOrder(Order order) {
         orderCollection.add(order);
-        return order;
-    }
-
-    public Order removeOrder(Order order) {
-        orderCollection.remove(order);
         return order;
     }
 }

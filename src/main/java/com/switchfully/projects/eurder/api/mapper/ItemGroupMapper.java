@@ -11,15 +11,4 @@ public class ItemGroupMapper {
         return new ItemGroup(itemGroupDto.getItemId(),
                 itemGroupDto.getAmount());
     }
-
-    public ItemGroupDto mapItemGroupToItemGroupDto(ItemGroup itemGroup) {
-        return new ItemGroupDto.ItemGroupDtoBuilder()
-                .setItemGroupId(itemGroup.getItemGroupId())
-                .setItemId(itemGroup.getItemId())
-                .setAmount(itemGroup.getAmount())
-                .setPriceSnapshot(itemGroup.getPriceSnapshot())
-                .setShippingDate(itemGroup.getShippingDate())
-                .build();
-
-    }
 }

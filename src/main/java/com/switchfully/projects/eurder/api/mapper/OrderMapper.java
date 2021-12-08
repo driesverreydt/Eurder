@@ -1,6 +1,5 @@
 package com.switchfully.projects.eurder.api.mapper;
 
-import com.switchfully.projects.eurder.api.dto.ItemGroupDto;
 import com.switchfully.projects.eurder.api.dto.OrderDto;
 import com.switchfully.projects.eurder.domain.order.ItemGroup;
 import com.switchfully.projects.eurder.domain.order.Order;
@@ -23,15 +22,4 @@ public class OrderMapper {
         return new Order(orderDto.getUserId(),
                 itemGroupCollection);
     }
-
-    public OrderDto mapOrderToOrderDto(Order order) {
-        Collection<ItemGroupDto> itemGroupDtoCollection = order.getItemGroupCollection().stream()
-                .map(itemGroupMapper::mapItemGroupToItemGroupDto).toList();
-        return new OrderDto.OrderDtoBuilder()
-                .setOrderId(order.getOrderId())
-                .setUserId(order.getUserId())
-                .setItemGroupDtoCollection(itemGroupDtoCollection)
-                .build();
-    }
-
 }

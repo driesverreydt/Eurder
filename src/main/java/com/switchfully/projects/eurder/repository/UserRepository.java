@@ -30,10 +30,4 @@ public class UserRepository {
         userCollection.add(user);
         return user;
     }
-
-    public User removeUser(User user) {
-        userCollection.remove(user);
-        return user;
-    }
-
 }

@@ -39,7 +39,6 @@ public class Order {
                 .reduce(0.0, Double::sum);
     }
 
-
     private void validateOrderInformation(String userId, Collection<ItemGroup> itemGroupCollection) {
         if(userId == null){
             logger.error("For an order the userId referencing the customer has to be present");
