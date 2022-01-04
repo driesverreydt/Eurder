@@ -1,47 +1,64 @@
 package com.switchfully.projects.eurder.domain.order;
 
 import com.switchfully.projects.eurder.domain.exception.InvalidItemGroupInformationException;
+import com.switchfully.projects.eurder.domain.item.Item;
+import com.switchfully.projects.eurder.service.shippingdatecalculator.ShippingDateCalculator;
+import com.switchfully.projects.eurder.service.shippingdatecalculator.ShippingDateCalculatorInStock;
+import com.switchfully.projects.eurder.service.shippingdatecalculator.ShippingDateCalculatorOutOfStock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.UUID;
 
+@Entity
+@Table(name = "item_groups")
 public class ItemGroup {
 
-    private final String itemGroupId;
-    private final String itemId;
+    @Id
+    @Column(name = "item_group_id")
+    private UUID itemGroupId;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "item_id")
+    private Item item;
+
+    @Column(name = "price_snapshot")
     private double priceSnapshot;
-    private final int amount;
+
+    @Column(name = "amount")
+    private int amount;
+
+    @Column(name = "shipping_date")
     private LocalDate shippingDate;
+
+    @Transient
     private final Logger logger = LoggerFactory.getLogger(ItemGroup.class);
 
-    public ItemGroup(String itemId, int amount) {
-        validateItemGroupInformation(itemId, priceSnapshot, amount);
-        this.itemGroupId = UUID.randomUUID().toString();
-        this.itemId = itemId;
+    public ItemGroup(Item item, int amount) {
+        validateItemGroupInformation(item, amount);
+        this.itemGroupId = UUID.randomUUID();
+        this.item = item;
         this.amount = amount;
+        setPriceSnapshot();
+        setShippingDate();
+        adjustStock();
     }
 
-    public String getItemGroupId() {
+    private ItemGroup() {
+    }
+
+    public UUID getItemGroupId() {
         return itemGroupId;
     }
 
-    public String getItemId() {
-        return itemId;
+    public Item getItem() {
+        return item;
     }
 
     public double getPriceSnapshot() {
         return priceSnapshot;
-    }
-
-    public void setPriceSnapshot(double priceSnapshot) {
-        if (priceSnapshot <= 0) {
-            logger.error("For an item group snapshot price can not be less than 0");
-            throw new InvalidItemGroupInformationException("The price " + priceSnapshot +
-                    " in an item group has to strictly positive");
-        }
-        this.priceSnapshot = priceSnapshot;
     }
 
     public int getAmount() {
@@ -56,17 +73,8 @@ public class ItemGroup {
         return shippingDate;
     }
 
-    public void setShippingDate(LocalDate shippingDate) {
-        if (shippingDate.isBefore(LocalDate.now())) {
-            logger.error("For an item group the shipping date can not be set before today");
-            throw new InvalidItemGroupInformationException("The shippingDate " + shippingDate +
-                    " in an item group cannot be before today");
-        }
-        this.shippingDate = shippingDate;
-    }
-
-    private void validateItemGroupInformation(String itemId, double priceSnapshot, int amount) {
-        if (itemId == null) {
+    private void validateItemGroupInformation(Item item, int amount) {
+        if (item == null) {
             logger.error("For an item group the itemId of the item it references has to be present");
             throw new InvalidItemGroupInformationException("The itemId in an item group cannot be null");
         }
@@ -74,6 +82,29 @@ public class ItemGroup {
             logger.error("For an item group the amount has to be strictly positive upon creation");
             throw new InvalidItemGroupInformationException("The amount " + amount +
                     " in an item group has to strictly positive");
+        }
+    }
+
+    private void setPriceSnapshot() {
+        this.priceSnapshot = item.getPrice();
+    }
+
+    private void setShippingDate() {
+        boolean enoughInStock = item.getAmount() >= amount;
+
+        ShippingDateCalculator shippingDateCalculator;
+        if (enoughInStock) {
+            shippingDateCalculator = new ShippingDateCalculatorInStock();
+        } else {
+            shippingDateCalculator = new ShippingDateCalculatorOutOfStock();
+        }
+        this.shippingDate = shippingDateCalculator.calculateShippingDate();
+    }
+
+    private void adjustStock() {
+        int newAmount = item.getAmount() - amount;
+        if (newAmount >= 0) {
+            item.setAmount(newAmount);
         }
     }
 }

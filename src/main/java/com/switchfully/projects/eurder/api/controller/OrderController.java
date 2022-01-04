@@ -1,8 +1,6 @@
 package com.switchfully.projects.eurder.api.controller;
 
 import com.switchfully.projects.eurder.api.dto.OrderDto;
-import com.switchfully.projects.eurder.api.mapper.OrderMapper;
-import com.switchfully.projects.eurder.domain.order.Order;
 import com.switchfully.projects.eurder.security.AuthorizationService;
 import com.switchfully.projects.eurder.security.EurderFeature;
 import com.switchfully.projects.eurder.service.OrderService;
@@ -17,14 +15,12 @@ import org.springframework.web.bind.annotation.*;
 public class OrderController {
 
     private final OrderService orderService;
-    private final OrderMapper orderMapper;
     private final AuthorizationService authorizationService;
     private final Logger logger = LoggerFactory.getLogger(OrderController.class);
 
     @Autowired
-    public OrderController(OrderService orderService, OrderMapper orderMapper, AuthorizationService authorizationService) {
+    public OrderController(OrderService orderService, AuthorizationService authorizationService) {
         this.orderService = orderService;
-        this.orderMapper = orderMapper;
         this.authorizationService = authorizationService;
     }
 
@@ -33,8 +29,7 @@ public class OrderController {
     public double createOrder(@RequestBody OrderDto orderDto, @RequestHeader(required = false) String authorization) {
         logger.info("Add order method called");
         authorizationService.authorize(EurderFeature.ORDER_CREATE, authorization);
-        Order order = orderMapper.mapOrderDtoToOrder(orderDto);
-        double totalOrderPrice = orderService.saveOrder(order);
+        double totalOrderPrice = orderService.saveOrderDto(orderDto);
         logger.info("Add order method successfully finished");
         return totalOrderPrice;
     }

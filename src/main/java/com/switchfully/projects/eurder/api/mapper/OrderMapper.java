@@ -3,6 +3,8 @@ package com.switchfully.projects.eurder.api.mapper;
 import com.switchfully.projects.eurder.api.dto.OrderDto;
 import com.switchfully.projects.eurder.domain.order.ItemGroup;
 import com.switchfully.projects.eurder.domain.order.Order;
+import com.switchfully.projects.eurder.domain.user.User;
+import com.switchfully.projects.eurder.service.UserService;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
@@ -11,18 +13,11 @@ import java.util.Collection;
 public class OrderMapper {
 
     private final ItemGroupMapper itemGroupMapper;
+    private final UserService userService;
 
-    public OrderMapper(ItemGroupMapper itemGroupMapper) {
+    public OrderMapper(ItemGroupMapper itemGroupMapper, UserService userService) {
         this.itemGroupMapper = itemGroupMapper;
+        this.userService = userService;
     }
 
-    public Order mapOrderDtoToOrder(OrderDto orderDto) {
-        Collection<ItemGroup> itemGroupCollection = null;
-        if(orderDto.getItemGroupDtoCollection() != null){
-            itemGroupCollection = orderDto.getItemGroupDtoCollection().stream()
-                    .map(itemGroupMapper::mapItemGroupDtoToItemGroup).toList();
-        }
-        return new Order(orderDto.getUserId(),
-                itemGroupCollection);
-    }
 }

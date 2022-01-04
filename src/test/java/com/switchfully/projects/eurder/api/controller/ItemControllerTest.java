@@ -59,7 +59,7 @@ class ItemControllerTest {
                         .extract()
                         .as(ItemDto.class);
 
-        assertThat(createdItemDto.getItemId()).isNotBlank();
+        assertThat(createdItemDto.getItemId()).isNotNull();
         assertThat(createdItemDto.getName()).isEqualTo(itemName);
         assertThat(createdItemDto.getDescription()).isEqualTo(itemDescription);
         assertThat(createdItemDto.getPrice()).isEqualTo(itemPrice);
@@ -113,19 +113,19 @@ class ItemControllerTest {
                 .setUserRole(UserRole.CUSTOMER)
                 .build();
 
-                RestAssured
-                        .given()
-                        .body(createUserCustomerDto)
-                        .accept(JSON)
-                        .contentType(JSON)
-                        .when()
-                        .port(port)
-                        .post("/users")
-                        .then()
-                        .assertThat()
-                        .statusCode(HttpStatus.CREATED.value())
-                        .extract()
-                        .as(UserDto.class);
+        RestAssured
+                .given()
+                .body(createUserCustomerDto)
+                .accept(JSON)
+                .contentType(JSON)
+                .when()
+                .port(port)
+                .post("/users")
+                .then()
+                .assertThat()
+                .statusCode(HttpStatus.CREATED.value())
+                .extract()
+                .as(UserDto.class);
 
         String authorization = "Basic " + Base64.getEncoder().encodeToString("customer@mail.com:customerpassword".getBytes());
 

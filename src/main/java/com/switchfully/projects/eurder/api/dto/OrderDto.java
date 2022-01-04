@@ -2,15 +2,15 @@ package com.switchfully.projects.eurder.api.dto;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
-import com.switchfully.projects.eurder.domain.order.ItemGroup;
 
 import java.util.Collection;
+import java.util.UUID;
 
 @JsonDeserialize(builder = OrderDto.OrderDtoBuilder.class)
 public class OrderDto {
 
-    private final String orderId;
-    private final String userId;
+    private final UUID orderId;
+    private final UUID userId;
     private final Collection<ItemGroupDto> itemGroupDtoCollection;
 
     private OrderDto(OrderDtoBuilder orderDtoBuilder) {
@@ -19,11 +19,11 @@ public class OrderDto {
         this.itemGroupDtoCollection = orderDtoBuilder.itemGroupDtoCollection;
     }
 
-    public String getOrderId() {
+    public UUID getOrderId() {
         return orderId;
     }
 
-    public String getUserId() {
+    public UUID getUserId() {
         return userId;
     }
 
@@ -33,16 +33,16 @@ public class OrderDto {
 
     @JsonPOJOBuilder(withPrefix = "set")
     public static class OrderDtoBuilder {
-        private String orderId;
-        private String userId;
+        private UUID orderId;
+        private UUID userId;
         private Collection<ItemGroupDto> itemGroupDtoCollection;
 
-        public OrderDtoBuilder setOrderId(String orderId) {
+        public OrderDtoBuilder setOrderId(UUID orderId) {
             this.orderId = orderId;
             return this;
         }
 
-        public OrderDtoBuilder setUserId(String userId) {
+        public OrderDtoBuilder setUserId(UUID userId) {
             this.userId = userId;
             return this;
         }

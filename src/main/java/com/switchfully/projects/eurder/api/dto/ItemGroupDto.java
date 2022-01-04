@@ -4,12 +4,13 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 @JsonDeserialize(builder = ItemGroupDto.ItemGroupDtoBuilder.class)
 public class ItemGroupDto {
 
-    private final String itemGroupId;
-    private final String itemId;
+    private final UUID itemGroupId;
+    private final UUID itemId;
     private final double priceSnapshot;
     private final int amount;
     private final LocalDate shippingDate;
@@ -22,11 +23,11 @@ public class ItemGroupDto {
         this.shippingDate = itemGroupDtoBuilder.shippingDate;
     }
 
-    public String getItemGroupId() {
+    public UUID getItemGroupId() {
         return itemGroupId;
     }
 
-    public String getItemId() {
+    public UUID getItemId() {
         return itemId;
     }
 
@@ -44,18 +45,18 @@ public class ItemGroupDto {
 
     @JsonPOJOBuilder(withPrefix = "set")
     public static class ItemGroupDtoBuilder {
-        private String itemGroupId;
-        private String itemId;
+        private UUID itemGroupId;
+        private UUID itemId;
         private double priceSnapshot;
         private int amount;
         private LocalDate shippingDate;
 
-        public ItemGroupDtoBuilder setItemGroupId(String itemGroupId) {
+        public ItemGroupDtoBuilder setItemGroupId(UUID itemGroupId) {
             this.itemGroupId = itemGroupId;
             return this;
         }
 
-        public ItemGroupDtoBuilder setItemId(String itemId) {
+        public ItemGroupDtoBuilder setItemId(UUID itemId) {
             this.itemId = itemId;
             return this;
         }

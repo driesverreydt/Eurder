@@ -5,27 +5,45 @@ import com.switchfully.projects.eurder.domain.user.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.persistence.*;
 import java.util.UUID;
 
+@Entity
+@Table(name = "items")
 public class Item {
 
-    private final String itemId;
-    private final String name;
-    private final String description;
-    private final double price;
+    @Id
+    @Column(name = "item_id")
+    private UUID itemId;
+
+    @Column(name = "name")
+    private String name;
+
+    @Column(name = "description")
+    private String description;
+
+    @Column(name = "price")
+    private double price;
+
+    @Column(name = "amount")
     private int amount;
+
+    @Transient
     private final Logger logger = LoggerFactory.getLogger(User.class);
 
     public Item(String name, String description, double price, int amount) {
         itemInformationValidation(name, description, price, amount);
-        this.itemId = UUID.randomUUID().toString();
+        this.itemId = UUID.randomUUID();
         this.name = name;
         this.description = description;
         this.price = price;
         this.amount = amount;
     }
 
-    public String getItemId() {
+    private Item() {
+    }
+
+    public UUID getItemId() {
         return itemId;
     }
 

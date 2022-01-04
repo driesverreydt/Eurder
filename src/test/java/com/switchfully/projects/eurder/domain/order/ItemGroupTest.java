@@ -1,49 +1,36 @@
 package com.switchfully.projects.eurder.domain.order;
 
 import com.switchfully.projects.eurder.domain.exception.InvalidItemGroupInformationException;
+import com.switchfully.projects.eurder.domain.item.Item;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-
-import java.time.LocalDate;
 
 class ItemGroupTest {
 
+    private static Item item;
+
+    @BeforeAll
+    static void setup() {
+        item = new Item("name", "description", 1.50, 5);
+    }
+
     @Test
-    void givenItemGroupWithNoItemId_whenCreatingAnItemGroup_thenThrowInvalidItemGroupInformationException(){
+    void givenItemGroupWithNoItemId_whenCreatingAnItemGroup_thenThrowInvalidItemGroupInformationException() {
         Assertions.assertThatExceptionOfType(InvalidItemGroupInformationException.class)
                 .isThrownBy(() -> new ItemGroup(null, 5));
     }
 
     @Test
-    void givenItemGroupWithZeroAmount_whenCreatingAnItemGroup_thenThrowInvalidItemGroupInformationException(){
+    void givenItemGroupWithZeroAmount_whenCreatingAnItemGroup_thenThrowInvalidItemGroupInformationException() {
         Assertions.assertThatExceptionOfType(InvalidItemGroupInformationException.class)
-                .isThrownBy(() -> new ItemGroup("itemId", 0));
+                .isThrownBy(() -> new ItemGroup(item, 0));
     }
 
     @Test
-    void givenItemGroupWithNegativeAmount_whenCreatingAnItemGroup_thenThrowInvalidItemGroupInformationException(){
+    void givenItemGroupWithNegativeAmount_whenCreatingAnItemGroup_thenThrowInvalidItemGroupInformationException() {
         Assertions.assertThatExceptionOfType(InvalidItemGroupInformationException.class)
-                .isThrownBy(() -> new ItemGroup("itemId", -1));
+                .isThrownBy(() -> new ItemGroup(item, -1));
     }
 
-    @Test
-    void givenItemGroup_whenSettingZeroPriceSnapshot_thenThrowInvalidItemGroupInformationException(){
-        ItemGroup itemGroup = new ItemGroup("userId",5);
-        Assertions.assertThatExceptionOfType(InvalidItemGroupInformationException.class)
-                .isThrownBy(() -> itemGroup.setPriceSnapshot(0.0));
-    }
-
-    @Test
-    void givenItemGroup_whenSettingNegativePriceSnapshot_thenThrowInvalidItemGroupInformationException(){
-        ItemGroup itemGroup = new ItemGroup("userId",5);
-        Assertions.assertThatExceptionOfType(InvalidItemGroupInformationException.class)
-                .isThrownBy(() -> itemGroup.setPriceSnapshot(-1.0));
-    }
-
-    @Test
-    void givenItemGroup_whenSettingDateBeforeNow_thenThrowInvalidItemGroupInformationException(){
-        ItemGroup itemGroup = new ItemGroup("userId",5);
-        Assertions.assertThatExceptionOfType(InvalidItemGroupInformationException.class)
-                .isThrownBy(() -> itemGroup.setShippingDate(LocalDate.now().minusDays(1)));
-    }
 }

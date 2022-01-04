@@ -1,32 +1,49 @@
 package com.switchfully.projects.eurder.domain.order;
 
 import com.switchfully.projects.eurder.domain.exception.InvalidOrderInformationException;
+import com.switchfully.projects.eurder.domain.user.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.persistence.*;
 import java.util.Collection;
 import java.util.UUID;
 
+@Entity
+@Table(name = "orders")
 public class Order {
 
-    private final String orderId;
-    private final String userId;
-    private final Collection<ItemGroup> itemGroupCollection;
+    @Id
+    @Column(name = "order_id")
+    private UUID orderId;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "order_id", nullable = false)
+    private Collection<ItemGroup> itemGroupCollection;
+
+    @Transient
     private final Logger logger = LoggerFactory.getLogger(Order.class);
 
-    public Order(String userId, Collection<ItemGroup> itemGroupCollection) {
-        validateOrderInformation(userId,itemGroupCollection);
-        this.orderId = UUID.randomUUID().toString();
-        this.userId = userId;
+    public Order(User user, Collection<ItemGroup> itemGroupCollection) {
+        validateOrderInformation(user, itemGroupCollection);
+        this.orderId = UUID.randomUUID();
+        this.user = user;
         this.itemGroupCollection = itemGroupCollection;
     }
 
-    public String getOrderId() {
+    private Order() {
+    }
+
+    public UUID getOrderId() {
         return orderId;
     }
 
-    public String getUserId() {
-        return userId;
+    public User getUser() {
+        return user;
     }
 
     public Collection<ItemGroup> getItemGroupCollection() {
@@ -39,19 +56,19 @@ public class Order {
                 .reduce(0.0, Double::sum);
     }
 
-    private void validateOrderInformation(String userId, Collection<ItemGroup> itemGroupCollection) {
-        if(userId == null){
-            logger.error("For an order the userId referencing the customer has to be present");
-            throw new InvalidOrderInformationException("For an order the userId referencing the customer " +
+    private void validateOrderInformation(User user, Collection<ItemGroup> itemGroupCollection) {
+        if (user == null) {
+            logger.error("For an order the user referencing the customer has to be present");
+            throw new InvalidOrderInformationException("For an order the user referencing the customer " +
                     "has to be present");
         }
-        if(itemGroupCollection == null){
+        if (itemGroupCollection == null) {
             logger.error("For an order the itemGroupCollection referencing the items to be ordered " +
                     "has to be present");
             throw new InvalidOrderInformationException("For an order the itemGroupCollection " +
                     "referencing the items to be ordered has to be present");
         }
-        if(itemGroupCollection.isEmpty()){
+        if (itemGroupCollection.isEmpty()) {
             logger.error("For an order the itemGroupCollection referencing the items to be ordered " +
                     "has to contain at least one itemGroup");
             throw new InvalidOrderInformationException("For an order the itemGroupCollection referencing " +

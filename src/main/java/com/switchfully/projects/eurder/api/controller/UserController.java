@@ -1,8 +1,5 @@
 package com.switchfully.projects.eurder.api.controller;
 
-import com.switchfully.projects.eurder.api.mapper.UserMapper;
-import com.switchfully.projects.eurder.domain.exception.NoSuchCustomerException;
-import com.switchfully.projects.eurder.domain.user.User;
 import com.switchfully.projects.eurder.api.dto.UserDto;
 import com.switchfully.projects.eurder.security.AuthorizationService;
 import com.switchfully.projects.eurder.security.EurderFeature;
@@ -14,21 +11,19 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
-import java.util.NoSuchElementException;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/users")
 public class UserController {
 
     private final UserService userService;
-    private final UserMapper userMapper;
     private final AuthorizationService authorizationService;
     private final Logger logger = LoggerFactory.getLogger(UserController.class);
 
     @Autowired
-    public UserController(UserService userService, UserMapper userMapper, AuthorizationService authorizationService) {
+    public UserController(UserService userService, AuthorizationService authorizationService) {
         this.userService = userService;
-        this.userMapper = userMapper;
         this.authorizationService = authorizationService;
     }
 
@@ -37,9 +32,7 @@ public class UserController {
     public UserDto registerCustomer(@RequestBody UserDto userDto, @RequestHeader(required = false) String authorization) {
         logger.info("Register customer method called");
         authorizationService.authorize(EurderFeature.CUSTOMER_CREATE, authorization);
-        User user = userMapper.mapUserDtoToUser(userDto);
-        User savedUser = userService.saveUser(user);
-        UserDto savedUserDto = userMapper.mapUserToUserDto(savedUser);
+        UserDto savedUserDto = userService.saveUserDto(userDto);
         logger.info("Register customer method successfully finished");
         return savedUserDto;
     }
@@ -49,27 +42,18 @@ public class UserController {
     public Collection<UserDto> getAllCustomers(@RequestHeader(required = false) String authorization) {
         logger.info("View all customers method called");
         authorizationService.authorize(EurderFeature.CUSTOMER_VIEW_ALL, authorization);
-        Collection<User> customers = userService.getAllCustomers();
-        Collection<UserDto> customerDtos = customers.stream()
-                .map(userMapper::mapUserToUserDto)
-                .toList();
+        Collection<UserDto> customerDtos = userService.getAllCustomerDtos();
         logger.info("View all customers method successfully finished");
         return customerDtos;
     }
 
-    @GetMapping(path = "/{userId}" , produces = "application/json")
+    @GetMapping(path = "/{userId}", produces = "application/json")
     @ResponseStatus(HttpStatus.OK)
     public UserDto getCustomerById(@PathVariable String userId, @RequestHeader(required = false) String authorization) {
         logger.info("View customer by id method called");
         authorizationService.authorize(EurderFeature.CUSTOMER_VIEW_SINGLE, authorization);
-        User customer;
-        try {
-            customer = userService.getCustomersById(userId).iterator().next();
-        } catch (NoSuchElementException ex){
-            logger.error("Customer with id " + userId + "could not be found");
-            throw new NoSuchCustomerException("Customer with id " + userId + " could not be found");
-        }
-        UserDto customerDto = userMapper.mapUserToUserDto(customer);
+        //TODO catch UUID parse error
+        UserDto customerDto = userService.getCustomerDtoById(UUID.fromString(userId));
         logger.info("View customer by id method successfully finished");
         return customerDto;
     }

@@ -192,8 +192,7 @@ class OrderControllerTest {
                         .statusCode(HttpStatus.BAD_REQUEST.value())
                         .extract().path("message");
 
-        assertThat(responseMessage).isEqualTo("For an order the itemGroupCollection " +
-                "referencing the items to be ordered has to be present");
+        assertThat(responseMessage).isEqualTo("The item group collection in the order can not be null");
     }
 
     @Test

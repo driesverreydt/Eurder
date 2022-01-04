@@ -1,15 +1,24 @@
 package com.switchfully.projects.eurder.domain.user;
 
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
 import java.util.Objects;
 
+@Embeddable
 public class Name {
 
-    private final String firstName;
-    private final String lastName;
+    @Column(name = "name_first_name")
+    private String firstName;
+
+    @Column(name = "name_last_name")
+    private String lastName;
 
     public Name(String firstName, String lastName) {
         this.firstName = firstName;
         this.lastName = lastName;
+    }
+
+    private Name() {
     }
 
     public String getFirstName() {

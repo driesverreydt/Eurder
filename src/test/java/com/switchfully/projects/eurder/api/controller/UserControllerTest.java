@@ -1,8 +1,10 @@
 package com.switchfully.projects.eurder.api.controller;
 
-import com.switchfully.projects.eurder.api.dto.ItemDto;
 import com.switchfully.projects.eurder.api.dto.UserDto;
-import com.switchfully.projects.eurder.domain.user.*;
+import com.switchfully.projects.eurder.domain.user.Address;
+import com.switchfully.projects.eurder.domain.user.EmailAddress;
+import com.switchfully.projects.eurder.domain.user.Name;
+import com.switchfully.projects.eurder.domain.user.PhoneNumber;
 import com.switchfully.projects.eurder.security.UserRole;
 import io.restassured.RestAssured;
 import org.assertj.core.api.Assertions;
@@ -30,7 +32,7 @@ class UserControllerTest {
         Name myName = new Name("Dries", "Verreydt");
         Address myAddress = new Address("Vaartstraat", 61, 3000, "Leuven");
         EmailAddress myEmailAddress = new EmailAddress("driesvv", "hotmail", "com");
-        String myPassword = "password";
+        String myPassword = "customerpassword";
         PhoneNumber myPhoneNumber = new PhoneNumber("0123456789", "Belgium");
 
         UserDto createUserCustomerDto = new UserDto.UserDtoBuilder()
@@ -57,7 +59,7 @@ class UserControllerTest {
                         .extract()
                         .as(UserDto.class);
 
-        assertThat(createdUserCustomerDto.getUserId()).isNotBlank();
+        assertThat(createdUserCustomerDto.getUserId()).isNotNull();
         assertThat(createdUserCustomerDto.getName()).isEqualTo(myName);
         assertThat(createdUserCustomerDto.getAddress()).isEqualTo(myAddress);
         assertThat(createdUserCustomerDto.getEmailAddress()).isEqualTo(myEmailAddress);
@@ -99,7 +101,7 @@ class UserControllerTest {
     }
 
     @Test
-    void givenASystemWithCustomers_whenRequestingAnOverviewOfAllCustomersAsAdmin_thenRespondWithListOfAllCustomers(){
+    void givenASystemWithCustomers_whenRequestingAnOverviewOfAllCustomersAsAdmin_thenRespondWithListOfAllCustomers() {
         //Add customer 1
         Name myName1 = new Name("Dries", "Verreydt");
         Address myAddress1 = new Address("Vaartstraat", 61, 3000, "Leuven");
@@ -213,9 +215,9 @@ class UserControllerTest {
                         .jsonPath()
                         .getList(".", UserDto.class);
 
-        assertThat(collectionContains(customerCollection,createdUserCustomerDto1)).isTrue();
-        assertThat(collectionContains(customerCollection,createdUserCustomerDto2)).isTrue();
-        assertThat(collectionContains(customerCollection,createdUserCustomerDto3)).isTrue();
+        assertThat(collectionContains(customerCollection, createdUserCustomerDto1)).isTrue();
+        assertThat(collectionContains(customerCollection, createdUserCustomerDto2)).isTrue();
+        assertThat(collectionContains(customerCollection, createdUserCustomerDto3)).isTrue();
         assertThat(customerCollection.size()).isEqualTo(3);
     }
 
@@ -263,20 +265,20 @@ class UserControllerTest {
                         .contentType(JSON)
                         .when()
                         .port(port)
-                        .get("/users/"+createdUserCustomerDto.getUserId())
+                        .get("/users/" + createdUserCustomerDto.getUserId())
                         .then()
                         .assertThat()
                         .statusCode(HttpStatus.OK.value())
                         .extract()
                         .as(UserDto.class);
 
-        assertThat(customersAreTheSame(createdUserCustomerDto,customer)).isTrue();
+        assertThat(customersAreTheSame(createdUserCustomerDto, customer)).isTrue();
     }
 
     @Test
-    void givenCustomerNotInSystem_whenRequestingToViewCustomer_thenBadRequestResponseIsReturnedWithMessage(){
+    void givenCustomerNotInSystem_whenRequestingToViewCustomer_thenBadRequestResponseIsReturnedWithMessage() {
         String authorization = "Basic " + Base64.getEncoder().encodeToString("admin@mail.com:adminpassword".getBytes());
-
+        String fakeUUID = "8501ec0a-6caa-11ec-90d6-0242ac120003";
         String responseMessage =
                 RestAssured
                         .given()
@@ -285,44 +287,44 @@ class UserControllerTest {
                         .contentType(JSON)
                         .when()
                         .port(port)
-                        .get("/users/"+"notauserid")
+                        .get("/users/" + fakeUUID)
                         .then()
                         .assertThat()
                         .statusCode(HttpStatus.BAD_REQUEST.value())
                         .extract().path("message");
 
-        Assertions.assertThat(responseMessage).isEqualTo("Customer with id " + "notauserid" + " could not be found");
+        Assertions.assertThat(responseMessage).isEqualTo("Customer with id " + fakeUUID + " could not be found");
     }
 
-    private boolean collectionContains(Collection<UserDto> customerCollection, UserDto customer){
-        for(UserDto customerInCollection : customerCollection){
-            if(customersAreTheSame(customerInCollection,customer)){
+    private boolean collectionContains(Collection<UserDto> customerCollection, UserDto customer) {
+        for (UserDto customerInCollection : customerCollection) {
+            if (customersAreTheSame(customerInCollection, customer)) {
                 return true;
             }
         }
         return false;
     }
 
-    private boolean customersAreTheSame(UserDto customer1, UserDto customer2){
-        if(!customer1.getUserId().equals(customer2.getUserId())){
+    private boolean customersAreTheSame(UserDto customer1, UserDto customer2) {
+        if (!customer1.getUserId().equals(customer2.getUserId())) {
             return false;
         }
-        if(!customer1.getName().equals(customer2.getName())){
+        if (!customer1.getName().equals(customer2.getName())) {
             return false;
         }
-        if(!customer1.getAddress().equals(customer2.getAddress())){
+        if (!customer1.getAddress().equals(customer2.getAddress())) {
             return false;
         }
-        if(!customer1.getEmailAddress().equals(customer2.getEmailAddress())){
+        if (!customer1.getEmailAddress().equals(customer2.getEmailAddress())) {
             return false;
         }
-        if(!customer1.getPassword().equals(customer2.getPassword())){
+        if (!customer1.getPassword().equals(customer2.getPassword())) {
             return false;
         }
-        if(!customer1.getPhoneNumber().equals(customer2.getPhoneNumber())){
+        if (!customer1.getPhoneNumber().equals(customer2.getPhoneNumber())) {
             return false;
         }
-        if(!customer1.getUserRole().equals(customer2.getUserRole())){
+        if (!customer1.getUserRole().equals(customer2.getUserRole())) {
             return false;
         }
         return true;

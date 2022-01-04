@@ -1,19 +1,32 @@
 package com.switchfully.projects.eurder.domain.user;
 
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
 import java.util.Objects;
 
+@Embeddable
 public class Address {
 
-    private final String streetName;
-    private final int streetNumber;
-    private final int postalCode;
-    private final String cityName;
+    @Column(name = "address_street_name")
+    private String streetName;
+
+    @Column(name = "address_street_number")
+    private int streetNumber;
+
+    @Column(name = "address_postal_code")
+    private int postalCode;
+
+    @Column(name = "address_city_name")
+    private String cityName;
 
     public Address(String streetName, int streetNumber, int postalCode, String cityName) {
         this.streetName = streetName;
         this.streetNumber = streetNumber;
         this.postalCode = postalCode;
         this.cityName = cityName;
+    }
+
+    private Address() {
     }
 
     public String getStreetName() {

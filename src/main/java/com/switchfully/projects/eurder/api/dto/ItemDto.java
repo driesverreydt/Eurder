@@ -3,10 +3,12 @@ package com.switchfully.projects.eurder.api.dto;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 
+import java.util.UUID;
+
 @JsonDeserialize(builder = ItemDto.ItemDtoBuilder.class)
 public class ItemDto {
 
-    private final String itemId;
+    private final UUID itemId;
     private final String name;
     private final String description;
     private final double price;
@@ -20,7 +22,7 @@ public class ItemDto {
         this.amount = itemDtoBuilder.amount;
     }
 
-    public String getItemId() {
+    public UUID getItemId() {
         return itemId;
     }
 
@@ -42,13 +44,13 @@ public class ItemDto {
 
     @JsonPOJOBuilder(withPrefix = "set")
     public static class ItemDtoBuilder {
-        private String itemId;
+        private UUID itemId;
         private String name;
         private String description;
         private double price;
         private int amount;
 
-        public ItemDtoBuilder setItemId(String itemId) {
+        public ItemDtoBuilder setItemId(UUID itemId) {
             this.itemId = itemId;
             return this;
         }

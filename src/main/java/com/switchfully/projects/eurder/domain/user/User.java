@@ -5,22 +5,42 @@ import com.switchfully.projects.eurder.security.UserRole;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.persistence.*;
 import java.util.UUID;
 
+@Entity
+@Table(name = "users")
 public class User {
 
-    private final String userId;
-    private final Name name;
-    private final Address address;
-    private final EmailAddress emailAddress;
-    private final String password;
-    private final PhoneNumber phoneNumber;
-    private final UserRole userRole;
+    @Id
+    @Column(name = "user_id")
+    private UUID userId;
+
+    @Embedded
+    private Name name;
+
+    @Embedded
+    private Address address;
+
+    @Embedded
+    private EmailAddress emailAddress;
+
+    @Column(name = "password")
+    private String password;
+
+    @Embedded
+    private PhoneNumber phoneNumber;
+
+    @Column(name = "user_role")
+    @Enumerated(EnumType.STRING)
+    private UserRole userRole;
+
+    @Transient
     private final Logger logger = LoggerFactory.getLogger(User.class);
 
     public User(Name name, Address address, EmailAddress emailAddress, String password, PhoneNumber phoneNumber, UserRole userRole) {
         userInformationValidation(name, address, emailAddress, password, phoneNumber, userRole);
-        this.userId = UUID.randomUUID().toString();
+        this.userId = UUID.randomUUID();
         this.name = name;
         this.address = address;
         this.emailAddress = emailAddress;
@@ -29,7 +49,10 @@ public class User {
         this.userRole = userRole;
     }
 
-    public String getUserId() {
+    private User() {
+    }
+
+    public UUID getUserId() {
         return userId;
     }
 

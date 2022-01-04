@@ -5,22 +5,37 @@ import com.switchfully.projects.eurder.domain.exception.InvalidEmailStructureExc
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
+import javax.persistence.Transient;
 import java.util.Objects;
 
+@Embeddable
 public class EmailAddress {
 
     private static final String EMAIL_AT = "@";
     private static final String EMAIL_DOT = ".";
     private static final String EMAIL_REGEX = "^(.+)@(.+)$";
-    private final String userName;
-    private final String domainName;
-    private final String extension;
+
+    @Column(name = "email_user_name")
+    private String userName;
+
+    @Column(name = "email_domain_name")
+    private String domainName;
+
+    @Column(name = "email_extension")
+    private String extension;
+
+    @Transient
     private static final Logger logger = LoggerFactory.getLogger(EmailAddress.class);
 
     public EmailAddress(String userName, String domainName, String extension) {
         this.userName = userName;
         this.domainName = domainName;
         this.extension = extension;
+    }
+
+    private EmailAddress() {
     }
 
     public String getUserName() {

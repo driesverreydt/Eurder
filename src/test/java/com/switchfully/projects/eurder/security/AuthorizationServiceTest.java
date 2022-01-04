@@ -1,13 +1,16 @@
 package com.switchfully.projects.eurder.security;
 
 import com.switchfully.projects.eurder.domain.exception.AuthorisationNotGrantedException;
-import com.switchfully.projects.eurder.repository.UserRepository;
+import com.switchfully.projects.eurder.domain.user.*;
 import com.switchfully.projects.eurder.service.UserService;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
+import java.util.ArrayList;
 import java.util.Base64;
+import java.util.List;
 
 class AuthorizationServiceTest {
 
@@ -15,7 +18,18 @@ class AuthorizationServiceTest {
 
     @BeforeEach
     void setup() {
-        authorizationService = new AuthorizationService(new UserService(new UserRepository()));
+        UserService mockUserService = Mockito.mock(UserService.class);
+        List<User> userList = new ArrayList<>();
+        User user = new User(new Name("first", "last"),
+                new Address("street", 5, 2000, "city"),
+                new EmailAddress("admin", "mail", "com"),
+                "adminpassword",
+                new PhoneNumber("123456789", "Belgium"),
+                UserRole.ADMIN);
+        userList.add(user);
+        Mockito.when(mockUserService.getUsersByEmail(new EmailAddress("admin", "mail", "com")))
+                .thenReturn(userList);
+        authorizationService = new AuthorizationService(mockUserService);
     }
 
     @Test

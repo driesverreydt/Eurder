@@ -8,10 +8,12 @@ import com.switchfully.projects.eurder.domain.user.Name;
 import com.switchfully.projects.eurder.domain.user.PhoneNumber;
 import com.switchfully.projects.eurder.security.UserRole;
 
+import java.util.UUID;
+
 @JsonDeserialize(builder = UserDto.UserDtoBuilder.class)
 public class UserDto {
 
-    private final String userId;
+    private final UUID userId;
     private final Name name;
     private final Address address;
     private final EmailAddress emailAddress;
@@ -29,7 +31,7 @@ public class UserDto {
         this.userRole = userDtoBuilder.userRole;
     }
 
-    public String getUserId() {
+    public UUID getUserId() {
         return userId;
     }
 
@@ -60,7 +62,7 @@ public class UserDto {
     @JsonPOJOBuilder(withPrefix = "set")
     public static class UserDtoBuilder {
 
-        private String userId;
+        private UUID userId;
         private Name name;
         private Address address;
         private EmailAddress emailAddress;
@@ -68,7 +70,7 @@ public class UserDto {
         private PhoneNumber phoneNumber;
         private UserRole userRole;
 
-        public UserDtoBuilder setUserId(String userId) {
+        public UserDtoBuilder setUserId(UUID userId) {
             this.userId = userId;
             return this;
         }

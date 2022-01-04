@@ -1,15 +1,24 @@
 package com.switchfully.projects.eurder.domain.user;
 
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
 import java.util.Objects;
 
+@Embeddable
 public class PhoneNumber {
 
-    private final String phoneNumberDigits;
-    private final String country;
+    @Column(name = "phone_number_digits")
+    private String phoneNumberDigits;
+
+    @Column(name = "phone_number_country")
+    private String country;
 
     public PhoneNumber(String phoneNumberDigits, String country) {
         this.phoneNumberDigits = phoneNumberDigits;
         this.country = country;
+    }
+
+    private PhoneNumber() {
     }
 
     public String getPhoneNumberDigits() {
